@@ -56,8 +56,8 @@ body {
   min-width: 640px;
   font-size: 16px;
   margin: 0 auto;
-  padding-bottom: 44px;
-  padding-top:44px; /*iphone 的规则 给header让位 header用绝对定位 放在上面去*/
+  padding-bottom: 64px;
+  padding-top:64px;
 }
 
 .hidden,

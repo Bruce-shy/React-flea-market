@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderRoutes } from 'react-router-config';
-import { Bottom, TabBar, TabItem } from './HomeLayout.style';
+import { Top, TabBar, TabItem } from './HomeLayout.style';
 import { NavLink } from 'react-router-dom';
 
 
@@ -9,40 +9,55 @@ function Home(props: any) {
     // console.log(route)
     return (
         <React.Fragment>
-            <Bottom>
+            <Top>
                 <TabBar>
                     <NavLink to="/explore" activeClassName="selected">
                         <TabItem>
-                            <span className="tab-icon iconfont ">&#xe605;</span>
-                            <div className="tab-title">发现</div>
+                            <img  className="tab-img" src="https://nidelemonya.cn/logo.jpeg" alt="" />
+                        </TabItem>
+                    </NavLink>
+                    <NavLink to="/explore" activeClassName="selected">
+                        <TabItem>
+                            <div className="tab-title">首页</div>
                         </TabItem>
                     </NavLink>
                     <NavLink to="/forum" activeClassName="selected">
                         <TabItem>
-                         <span className="tab-icon iconfont ">&#xe668;</span>
-                          <div className="tab-title">讲堂</div>
+                          <div className="tab-title">二手</div>
                       </TabItem>
                     </NavLink>
                     <NavLink to="/tribe" activeClassName="selected">
                         <TabItem>
-                            <span className="tab-icon iconfont ">&#xe678;</span>
-                            <div className="tab-title">部落</div>
+                            <div className="tab-title">求购</div>
                         </TabItem>
                     </NavLink>
                     <NavLink to="/study" activeClassName="selected">
                         <TabItem>
-                            <span className="tab-icon iconfont ">&#xe609;</span>
-                            <div className="tab-title">学习</div>
+                            <div className="tab-title">校园动态</div>
                         </TabItem>
                     </NavLink>
                     <NavLink to="/user" activeClassName="selected">
                         <TabItem>
-                            <span className="tab-icon iconfont ">&#xe503;</span>
-                           <div className="tab-title">我的</div>
+                           <div className="tab-title">更多</div>
+                     </TabItem>
+                    </NavLink>
+                    <NavLink to="/user" activeClassName="selected">
+                        <TabItem>
+                           <div className="tab-title">更多</div>
+                     </TabItem>
+                    </NavLink>
+                    <NavLink to="/user" activeClassName="selected">
+                        <TabItem>
+                           <div className="tab-title">更多</div>
+                     </TabItem>
+                    </NavLink>
+                    <NavLink to="/user" activeClassName="selected">
+                        <TabItem>
+                           <div className="tab-title">登录</div>
                      </TabItem>
                     </NavLink>
                 </TabBar>
-            </Bottom>
+            </Top>
             {renderRoutes(route.routes)}
         </React.Fragment>
     )
