@@ -3,10 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import Fastclick  from 'fastclick';
-// 优化移动端 click 事件 把 click 事件变成 touch 事件 因为 移动端 click 事件有延迟 0.5s。
-
-Fastclick.attach(document.body);
 
 ReactDOM.render(
   <React.StrictMode>

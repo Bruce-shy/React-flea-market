@@ -2,21 +2,15 @@
 // React 自带路由懒加载
 import React, { lazy, Suspense} from 'react';
 import { Redirect } from 'react-router-dom';
-// import Explore from'../pages/explore/Explore';
-// import Forum from'../pages/forum/Forum';
-// import Tribe from '../pages/tribe/Tribe';
-// import Study from '../pages/study/Study';
-// import My from '../pages/My/My';
-// import Account from '../pages/account/Account';
 import BlankLayout from '../layouts/BlankLayout';
 import HomeLayout from '../layouts/HomeLayout';
 // import ForumLayout from '../layouts/ForumLayout';
 
 // 懒加载 不会直接引入
-// const ExploreComponent = lazy(()=> import ('../pages/explore/Explore'))
-// const ForumComponent = lazy(()=> import ('../pages/forum/course/Forum'))
-// const TribeComponent = lazy(()=> import ('../pages/tribe/Tribe'))
-// const StudyComponent = lazy(()=> import ('../pages/study/Study'))
+const HomeComponent = lazy(()=> import ('../pages/home'));
+const PurchaseComponent = lazy(()=> import ('../pages/purchase'))
+const NewsComponent = lazy(()=> import ('../pages/news'))
+const LoginComponent = lazy(()=> import ('../pages/login'))
 // const MyComponent = lazy(()=> import ('../pages/my/My'))
 // const AccountComponent = lazy(() => import ('../pages/my/account/Account'))
 // const IntroComponent = lazy(() => import ('../pages/forum/course/intro/Intro'))
@@ -27,15 +21,15 @@ import HomeLayout from '../layouts/HomeLayout';
 // const OrderComponent = lazy(() => import ('../pages/my/order/Order'))
 
 // 进行性能优化 懒加载;
-// const SuspenseComponent = (Component: any) => (props : any) => {
-//     // fallback 是一个回滚事件
-//     return (
-//         <Suspense fallback= {null}>
-//             <Component {...props}>
-//             </Component>
-//         </Suspense>
-//     )
-// }
+const SuspenseComponent = (Component: any) => (props : any) => {
+    // fallback 是一个回滚事件
+    return (
+        <Suspense fallback= {null}>
+            <Component {...props}>
+            </Component>
+        </Suspense>
+    )
+}
 
 const defaultRoutes = [
     {
@@ -48,13 +42,13 @@ const defaultRoutes = [
                     {
                         path:'/',
                         exact:true,
-                        render: () => <Redirect to={"/explore"}/>
+                        render: () => <Redirect to={"/goods"}/>
                     },
-                    // {
-                    //     path:'/explore',
-                    //     // component: Explore
-                    //     component:SuspenseComponent(ExploreComponent)
-                    // },
+                    {
+                        path:'/goods',
+                        // component: Explore
+                        component:SuspenseComponent(HomeComponent)
+                    },
                     // {
                     //     path:'/forum',
                     //     // component: Forum
@@ -86,16 +80,18 @@ const defaultRoutes = [
                     //         },
                     //     ]
                     // },
-                    // {
-                    //     path:'/tribe',
-                    //     // component: Tribe,
-                    //     component:SuspenseComponent(TribeComponent)
-                    // },
-                    // {
-                    //     path:'/study',
-                    //     // component: Study
-                    //     component:SuspenseComponent(StudyComponent)
-                    // },
+                    {
+                        path:'/buy',
+                        component:SuspenseComponent(PurchaseComponent)
+                    },
+                    {
+                        path:'/news',
+                        component:SuspenseComponent(NewsComponent)
+                    },
+                    {
+                        path:'/login',
+                        component:SuspenseComponent(LoginComponent)
+                    },
                     // {
                     //     path:'/user',
                     //     component:SuspenseComponent(MyComponent),
