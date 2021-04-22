@@ -46,7 +46,7 @@ const defaultRoutes = [
                     },
                     {
                         path:'/goods',
-                        // component: Explore
+                        // component: Home
                         component:SuspenseComponent(HomeComponent)
                     },
                     // {

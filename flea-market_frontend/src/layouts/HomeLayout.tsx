@@ -8,6 +8,8 @@ import {
   TabText,
 } from "./HomeLayout.style";
 import { NavLink } from "react-router-dom";
+import { Avatar, Image } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 
 function Home(props: any) {
   const { route } = props;
@@ -49,6 +51,7 @@ function Home(props: any) {
           <NavLink to="/login" activeClassName="selected">
             <TabItem>
               <TabText>登录</TabText>
+              <Avatar style={{marginLeft: '12px'}} icon={<UserOutlined />} />
             </TabItem>
           </NavLink>
         </TabBarRight>
