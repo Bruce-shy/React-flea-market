@@ -8,11 +8,15 @@ import {
   TabText,
 } from "./HomeLayout.style";
 import { NavLink } from "react-router-dom";
-import { Avatar, Image } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { Avatar } from "antd";
+import { UserOutlined } from "@ant-design/icons";
+import logo from '../assets/logo.png';
 
 function Home(props: any) {
-  const { route } = props;
+  const { route, location } = props;
+  const handleOnclick = () => {
+    console.log("你是傻逼");
+  };
   return (
     <React.Fragment>
       <Header>
@@ -20,38 +24,42 @@ function Home(props: any) {
           <NavLink to="/goods">
             <TabItem>
               <img
-                className="tab-img"
-                src="https://nidelemonya.cn/logo.jpeg"
-                alt=""
+                className="tabItem-image"
+                src={logo}
+                alt="东华理工大学校园二手交易"
               />
             </TabItem>
           </NavLink>
           <NavLink to="/goods" activeClassName="selected">
             <TabItem>
-              <TabText>首页</TabText>
+              <span className="tabItem-hover">
+                <TabText>首页</TabText>
+              </span>
             </TabItem>
           </NavLink>
           <NavLink to="/buy" activeClassName="selected">
             <TabItem>
-              <TabText>求购</TabText>
-            </TabItem>
-          </NavLink>
-          <NavLink to="/news" activeClassName="selected">
-            <TabItem>
-              <TabText>校园动态</TabText>
+              <span className="tabItem-hover">
+                <TabText>求购</TabText>
+              </span>
             </TabItem>
           </NavLink>
         </TabBarLeft>
         <TabBarRight>
-          <NavLink to="">
+          <NavLink to={location.pathname} onClick={handleOnclick}>
             <TabItem>
-              <TabText>发布</TabText>
+              <span className="tabItem-hover">
+                <TabText>发布</TabText>
+                <span className="iconfont">&#xe7b2;</span>
+              </span>
             </TabItem>
           </NavLink>
           <NavLink to="/login" activeClassName="selected">
             <TabItem>
-              <TabText>登录</TabText>
-              <Avatar style={{marginLeft: '12px'}} icon={<UserOutlined />} />
+              <span className="tabItem-hover">
+                <TabText>登录</TabText>
+              </span>
+              <Avatar style={{ marginLeft: "12px" }} icon={<UserOutlined />} />
             </TabItem>
           </NavLink>
         </TabBarRight>

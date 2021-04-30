@@ -9,15 +9,7 @@ import HomeLayout from '../layouts/HomeLayout';
 // 懒加载 不会直接引入
 const HomeComponent = lazy(()=> import ('../pages/home'));
 const PurchaseComponent = lazy(()=> import ('../pages/purchase'))
-const NewsComponent = lazy(()=> import ('../pages/news'))
 const LoginComponent = lazy(()=> import ('../pages/login'))
-// const MyComponent = lazy(()=> import ('../pages/my/My'))
-// const AccountComponent = lazy(() => import ('../pages/my/account/Account'))
-// const IntroComponent = lazy(() => import ('../pages/forum/course/intro/Intro'))
-// const CampComponent= lazy(()=> import ('../pages/forum/camp/Camp'))
-// const PayComponent= lazy(() => import ('../pages/payment/Payment'))
-// const DayComponent = lazy(()=> import ('../pages/forum/day/Day'))
-// const CourseComponent = lazy(() => import ('../pages/my/course/Course'))
 // const OrderComponent = lazy(() => import ('../pages/my/order/Order'))
 
 // 进行性能优化 懒加载;
@@ -83,10 +75,6 @@ const defaultRoutes = [
                     {
                         path:'/buy',
                         component:SuspenseComponent(PurchaseComponent)
-                    },
-                    {
-                        path:'/news',
-                        component:SuspenseComponent(NewsComponent)
                     },
                     {
                         path:'/login',
