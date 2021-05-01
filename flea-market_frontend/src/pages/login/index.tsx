@@ -1,5 +1,4 @@
 import { Form, Input, Button, Checkbox } from "antd";
-import backgroundImg from '../../assets/background.jpg';
 import styles from "./styles.moudle.less";
 
 const layout = {

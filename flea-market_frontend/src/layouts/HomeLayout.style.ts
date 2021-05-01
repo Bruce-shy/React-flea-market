@@ -14,6 +14,7 @@ export const Header = styled.div`
   box-shadow: 0 4px 8px 0 rgb(7 17 27 / 10%);
   background-color: rgb(255, 255, 255) !important;
 `;
+
 export const TabBarLeft = styled.div`
   flex: 2;
   height: 100%;
