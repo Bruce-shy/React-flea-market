@@ -8,8 +8,12 @@ import HomeLayout from '../layouts/HomeLayout';
 
 // 懒加载 不会直接引入
 const HomeComponent = lazy(()=> import ('../pages/home'));
-const PurchaseComponent = lazy(()=> import ('../pages/purchase'))
-const LoginComponent = lazy(()=> import ('../pages/login'))
+const PurchaseComponent = lazy(()=> import ('../pages/purchase'));
+const LoginComponent = lazy(()=> import ('../pages/login'));
+const RegisterComponent = lazy(()=> import ('../pages/register'));
+const ReleaseGoodsComponent = lazy(()=> import ('../pages/release_goods'));
+const ReleaseBuyComponent = lazy(()=> import ('../pages/release_buy'));
+const GoodsDetailComponent = lazy(()=> import ('../pages/goods_detail'));
 // const OrderComponent = lazy(() => import ('../pages/my/order/Order'))
 
 // 进行性能优化 懒加载;
@@ -41,6 +45,30 @@ const defaultRoutes = [
                         // component: Home
                         component:SuspenseComponent(HomeComponent)
                     },
+                    {
+                        path:'/buy',
+                        component:SuspenseComponent(PurchaseComponent)
+                    },
+                    {
+                        path:'/login',
+                        component:SuspenseComponent(LoginComponent)
+                    },
+                    {
+                        path:'/register',
+                        component:SuspenseComponent(RegisterComponent)
+                    },
+                    {
+                        path:'/release_goods',
+                        component:SuspenseComponent(ReleaseGoodsComponent)
+                    },
+                    {
+                        path: '/release_buy',
+                        component:SuspenseComponent(ReleaseBuyComponent)
+                    },
+                    {
+                        path: '/goods_detail',
+                        component:SuspenseComponent(GoodsDetailComponent)
+                    }
                     // {
                     //     path:'/forum',
                     //     // component: Forum
@@ -72,14 +100,6 @@ const defaultRoutes = [
                     //         },
                     //     ]
                     // },
-                    {
-                        path:'/buy',
-                        component:SuspenseComponent(PurchaseComponent)
-                    },
-                    {
-                        path:'/login',
-                        component:SuspenseComponent(LoginComponent)
-                    },
                     // {
                     //     path:'/user',
                     //     component:SuspenseComponent(MyComponent),

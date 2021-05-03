@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { renderRoutes } from "react-router-config";
 import {
   Header,
@@ -10,14 +10,18 @@ import {
 import { NavLink } from "react-router-dom";
 import { Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-import CardLink from '../components/cardLink';
-import logo from '../assets/logo.png';
+import CardLink from "../components/cardLink";
+import logo from "../assets/logo.png";
 
 function Home(props: any) {
   const { route, location } = props;
-  const handleOnclick = () => {
-    console.log("你是傻逼");
-  };
+  const [publishDisplay, updatePublishDisplay] = useState(false);
+  const [cardDisplay, updateCardDisplay] = useState(false);
+
+  const handleOnMouseEnter = () => updatePublishDisplay(true);
+  const handleOnMouseLeave = () =>
+    setTimeout(() => updatePublishDisplay(false), 200);
+
   return (
     <React.Fragment>
       <Header>
@@ -47,7 +51,11 @@ function Home(props: any) {
           </NavLink>
         </TabBarLeft>
         <TabBarRight>
-          <NavLink to={location.pathname} onClick={handleOnclick}>
+          <NavLink
+            to={location.pathname}
+            onMouseEnter={handleOnMouseEnter}
+            onMouseLeave={handleOnMouseLeave}
+          >
             <TabItem>
               <span className="tabItem-hover">
                 <TabText>发布</TabText>
@@ -65,7 +73,9 @@ function Home(props: any) {
           </NavLink>
         </TabBarRight>
       </Header>
-      <CardLink />
+      {(publishDisplay || cardDisplay) && (
+        <CardLink handleOnCardDisplay={updateCardDisplay} />
+      )}
       {renderRoutes(route.routes)}
     </React.Fragment>
   );
