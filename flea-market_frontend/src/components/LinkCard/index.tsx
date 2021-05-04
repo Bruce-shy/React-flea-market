@@ -4,12 +4,12 @@ import styles from "./styles.moudle.less";
 import purchaseImgSrc from "../../assets/purchase.png";
 import goodsImgSrc from "../../assets/goods.png";
 
-const CardLink = ({handleOnCardDisplay}:any) => {
+const LinkCard = ({handleOnCardDisplay}:any) => {
   const handleOnMouseEnter = () => handleOnCardDisplay(true);
   const handleOnMouseLeave = () => setTimeout(() => handleOnCardDisplay(false), 200);
 
   return (
-    <div className={styles.cardLinkWrap}
+    <div className={styles.linkCardWrap}
       onMouseEnter={handleOnMouseEnter}
       onMouseLeave={handleOnMouseLeave}>
       <NavLink to="/release_goods" className={styles.iconWrap}>
@@ -36,4 +36,4 @@ const CardLink = ({handleOnCardDisplay}:any) => {
   );
 };
 
-export default memo(CardLink);
+export default memo(LinkCard);

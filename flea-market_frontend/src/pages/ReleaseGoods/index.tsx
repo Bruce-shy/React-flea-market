@@ -1,5 +1,13 @@
 import styles from "./styles.moudle.less";
-import { Form, Select, Button, Upload, Input, message } from "antd";
+import {
+  Form,
+  Select,
+  Button,
+  Upload,
+  // Rate,
+  message,
+  Input,
+} from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import {SellerLabel} from '../../common/interface';
 
@@ -24,12 +32,12 @@ const normFile = (e: any) => {
   return e && e.fileList;
 };
 
-const ReleaseBuy = () => {
+const ReleaseGoods = () => {
   const handleOnFinish = (values: any) => {
-    const { phone_number, qq_number, weChat_number,seller_label } = values;
+    const { phone_number, qq_number, weChat_number, seller_label } = values;
     if (!phone_number && !qq_number && !weChat_number) {
       // 如果手机号码 QQ号码 微信号 都没有填写， 报错
-      message.error('微信号，手机号，QQ至少填写一项');
+      message.error("微信号，手机号，QQ至少填写一项");
     }
     if(seller_label.length >4) {
       message.error('标签最多选择四项');
@@ -39,11 +47,16 @@ const ReleaseBuy = () => {
   return (
     <div className={styles.inner}>
       <div className={styles.contentWrap}>
-        <h2 className={styles.titleText}>发布求购</h2>
+        <h2 className={styles.titleText}>发布商品</h2>
         <Form
           name="release_goods" // 表单名称
           {...formItemLayout} // 布局
           onFinish={handleOnFinish} // 提交表单且数据验证成功后回调事件
+          initialValues={{
+            // 初始值
+            postage: "商议",
+            // rate: 3.5, 打分
+          }}
         >
           <Form.Item
             name="title"
@@ -59,25 +72,58 @@ const ReleaseBuy = () => {
               },
             ]}
           >
-            <Input placeholder={"很重要，让别人对您的需求一目了然"} />
+            <Input placeholder={"很重要，显示在列表页"} />
           </Form.Item>
-          <Form.Item name="brief" label="简介(可选)">
+          <Form.Item
+            name="brief"
+            label="简介"
+            rules={[
+              {
+                required: true,
+                message: "请输入商品简介!",
+              },
+            ]}
+          >
             <TextArea
-              placeholder="让别人更清晰了解您的需求"
+              placeholder="很重要，显示在商品详情页"
               allowClear={true}
             />
           </Form.Item>
           <Form.Item
             name="price"
-            label="可接受价格"
+            label="标价"
             rules={[
+              {
+                type: "number",
+                message: "请输入数字",
+              },
               {
                 required: true,
                 message: "请输入商品标价!",
               },
             ]}
           >
-            <Input placeholder={"数字或文字，可接受的价格，如'100-150之间'"} />
+            <Input placeholder={"数字，想卖的价格"} />
+          </Form.Item>
+          <Form.Item
+            name="origin_price"
+            label="原价"
+            rules={[
+              {
+                type: "number",
+                message: "请输入数字",
+              },
+              {
+                required: true,
+                message: "请输入商品原价!",
+              },
+            ]}
+          >
+            <Input
+              placeholder={
+                "数字，购买时的价格，可以填大概价格，让用户对比性价比"
+              }
+            />
           </Form.Item>
           <Form.Item
             name="seller_label"
@@ -91,13 +137,28 @@ const ReleaseBuy = () => {
             ]}
           >
             <Select mode="multiple" maxTagCount={4} placeholder="请选择您商品适合的标签">
-              <Option value={SellerLabel.Genuine}>原装正品</Option>
+            <Option value={SellerLabel.Genuine}>原装正品</Option>
               <Option value={SellerLabel.NoDisassembly}>无拆无修</Option>
               <Option value={SellerLabel.Guaranteed}>如假包换</Option>
               <Option value={SellerLabel.FixedPrice}>一口价</Option>
               <Option value={SellerLabel.Negotiable}>价格可谈</Option>
               <Option value={SellerLabel.Welcome}>欢迎来撩</Option>
             </Select>
+          </Form.Item>
+          {/* <Form.Item name="rate" label="Rate">
+            <Rate /> // 评价星星功能
+          </Form.Item> */}
+          <Form.Item
+            name="postage"
+            label="邮费"
+            rules={[
+              {
+                required: true,
+                message: "请输入邮费!",
+              },
+            ]}
+          >
+            <Input placeholder={"填写数字"} />
           </Form.Item>
           <Form.Item name="weChat_number" label="微信">
             <Input placeholder={"微信号，手机号，QQ至少填写一项"} />
@@ -139,11 +200,11 @@ const ReleaseBuy = () => {
           </Form.Item>
           <Form.Item
             wrapperCol={{
-              span: 12,
+              span: 14,
               offset: 6,
             }}
           >
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" block={true}>
               提交
             </Button>
           </Form.Item>
@@ -153,4 +214,4 @@ const ReleaseBuy = () => {
   );
 };
 
-export default ReleaseBuy;
+export default ReleaseGoods;

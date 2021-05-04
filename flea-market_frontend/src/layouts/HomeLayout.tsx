@@ -10,7 +10,7 @@ import {
 import { NavLink } from "react-router-dom";
 import { Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-import CardLink from "../components/cardLink";
+import LinkCard from "../components/LinkCard";
 import logo from "../assets/logo.png";
 
 function Home(props: any) {
@@ -74,7 +74,7 @@ function Home(props: any) {
         </TabBarRight>
       </Header>
       {(publishDisplay || cardDisplay) && (
-        <CardLink handleOnCardDisplay={updateCardDisplay} />
+        <LinkCard handleOnCardDisplay={updateCardDisplay} />
       )}
       {renderRoutes(route.routes)}
     </React.Fragment>

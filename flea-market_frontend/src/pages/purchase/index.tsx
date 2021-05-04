@@ -5,14 +5,15 @@ import styles from "./styles.moudle.less";
 const listData: any = [];
 for (let i = 0; i < 40; i++) {
   listData.push({
+    account: `201720180311`,
     nickName: `迪迦奥特曼${i}号`,
     college: `软件学院`,
-    class: `201720180311`,
     releaseTime: `${new Date()}`,
     avatar: "https://api.youzixy.com/public/uploads/avatar/15784010675050.png",
     title: "二手女朋友",
     content: "御姐,萝莉,女王",
-    imageSrc: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png',
+    imageSrc:
+      "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
     contactMode: [
       { name: "qq", content: "12347312984" },
       { name: "手机", content: "12347312984" },
@@ -26,7 +27,7 @@ const ListHeader = ({ item }: any) => {
     <div className={styles.listHeader}>
       <span className={styles.listItemName}>{item.nickName}</span>
       <span className={styles.listItem}>{item.college}</span>
-      <span className={styles.listItem}>{item.class}</span>
+      <span className={styles.listItem}>{item.account}</span>
       <span className={styles.listItem}>
         更新于{moment(item.releaseTime).format("LLLL")}
       </span>
@@ -43,7 +44,6 @@ const ListIcon = ({ tagName }: any) => {
 };
 
 const Purchase = () => {
-  console.log(styles);
   return (
     <div className={styles.purchaseWrap}>
       <List
@@ -62,13 +62,7 @@ const Purchase = () => {
         renderItem={(item: any) => (
           <List.Item
             key={item.nickName}
-            extra={
-              <img
-                width={272}
-                alt="logo"
-                src={item.imageSrc}
-              />
-            }
+            extra={<img width={272} alt="logo" src={item.imageSrc} />}
           >
             <List.Item.Meta
               avatar={<Avatar src={item.avatar} />}

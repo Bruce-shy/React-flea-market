@@ -4,15 +4,12 @@ import {
   AppstoreOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
-import { NavLink } from "react-router-dom";
-import HomeSwiper from '../../components/homeSwiper';
+import HomeSwiper from '../../components/HomeSwiper';
+import DisplayCard from '../../components/DisplayCard';
 import styles from "./styles.moudle.less";
 
 const { SubMenu } = Menu;
-const { Meta } = Card;
-const cardStyle = {
-  width: 220,
-};
+
 
 enum SubType {
   Electronics = "sub1", // 数码产品
@@ -198,28 +195,7 @@ const Home = () => {
       <div className={styles.listWrap}>
         {cardList.map((m) => (
           <div className={styles.cardWrap}>
-            <Card
-              hoverable
-              style={cardStyle}
-              cover={
-                <img
-                  alt="example"
-                  src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-                />
-              }
-            >
-              <Meta title="衣品天成短袖" description="刚入手不久 全新" />
-              <div className={styles.cardInfo}>
-                <span>更新于2020-03-23</span>
-                <span>888人浏览</span>
-              </div>
-              <div className={styles.cardInfo}>
-                <span className={styles.cardAmount}>￥49</span>
-                <NavLink to={"/goods_detail?123"} activeClassName="selected">
-                  软件学院
-                </NavLink>
-              </div>
-            </Card>
+            <DisplayCard />
           </div>
         ))}
       </div>

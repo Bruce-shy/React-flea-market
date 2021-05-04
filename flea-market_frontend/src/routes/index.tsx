@@ -7,13 +7,13 @@ import HomeLayout from '../layouts/HomeLayout';
 // import ForumLayout from '../layouts/ForumLayout';
 
 // 懒加载 不会直接引入
-const HomeComponent = lazy(()=> import ('../pages/home'));
-const PurchaseComponent = lazy(()=> import ('../pages/purchase'));
-const LoginComponent = lazy(()=> import ('../pages/login'));
-const RegisterComponent = lazy(()=> import ('../pages/register'));
-const ReleaseGoodsComponent = lazy(()=> import ('../pages/release_goods'));
-const ReleaseBuyComponent = lazy(()=> import ('../pages/release_buy'));
-const GoodsDetailComponent = lazy(()=> import ('../pages/goods_detail'));
+const HomeComponent = lazy(()=> import ('../pages/Home'));
+const PurchaseComponent = lazy(()=> import ('../pages/Purchase'));
+const LoginComponent = lazy(()=> import ('../pages/Login'));
+const RegisterComponent = lazy(()=> import ('../pages/Register'));
+const ReleaseGoodsComponent = lazy(()=> import ('../pages/ReleaseGoods'));
+const ReleaseBuyComponent = lazy(()=> import ('../pages/ReleaseBuy'));
+const GoodsDetailComponent = lazy(()=> import ('../pages/GoodsDetail'));
 // const OrderComponent = lazy(() => import ('../pages/my/order/Order'))
 
 // 进行性能优化 懒加载;

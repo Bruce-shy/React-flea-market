@@ -1,248 +1,138 @@
-import React, { useState } from 'react';
-import {
-  Form,
-  Input,
-  Cascader,
-  Select,
-  Row,
-  Col,
-  Checkbox,
-  Button,
-  AutoComplete,
-} from 'antd';
-
-const { Option } = Select;
-
-const residences = [
-  {
-    value: 'zhejiang',
-    label: 'Zhejiang',
-    children: [
-      {
-        value: 'hangzhou',
-        label: 'Hangzhou',
-        children: [
-          {
-            value: 'xihu',
-            label: 'West Lake',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    value: 'jiangsu',
-    label: 'Jiangsu',
-    children: [
-      {
-        value: 'nanjing',
-        label: 'Nanjing',
-        children: [
-          {
-            value: 'zhonghuamen',
-            label: 'Zhong Hua Men',
-          },
-        ],
-      },
-    ],
-  },
-];
+import { Form, Button, Upload, Input, message } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import styles from "./styles.moudle.less";
 
 const formItemLayout = {
   labelCol: {
-    xs: { span: 24 },
-    sm: { span: 8 },
+    span: 6,
   },
   wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 16 },
+    span: 14,
   },
 };
-const tailFormItemLayout = {
-  wrapperCol: {
-    xs: {
-      span: 24,
-      offset: 0,
-    },
-    sm: {
-      span: 16,
-      offset: 8,
-    },
-  },
+
+const normFile = (e: any) => {
+  console.log("Upload event:", e);
+
+  if (Array.isArray(e)) {
+    return e;
+  }
+
+  return e && e.fileList;
 };
 
 const Register = () => {
-  const [form] = Form.useForm();
-
-  const onFinish = (values: any) => {
-    console.log('Received values of form: ', values);
-  };
-
-  const prefixSelector = (
-    <Form.Item name="prefix" noStyle>
-      <Select style={{ width: 70 }}>
-        <Option value="86">+86</Option>
-        <Option value="87">+87</Option>
-      </Select>
-    </Form.Item>
-  );
-
-  const [autoCompleteResult, setAutoCompleteResult] = useState<string[]>([]);
-
-  const onWebsiteChange = (value: string) => {
-    if (!value) {
-      setAutoCompleteResult([]);
-    } else {
-      setAutoCompleteResult(['.com', '.org', '.net'].map(domain => `${value}${domain}`));
+  const handleOnFinish = (values: any) => {
+    const { phone_number, qq_number, weChat_number,seller_label } = values;
+    if (!phone_number && !qq_number && !weChat_number) {
+      // 如果手机号码 QQ号码 微信号 都没有填写， 报错
+      message.error('微信号，手机号，QQ至少填写一项');
     }
+    if(seller_label.length >4) {
+      message.error('标签最多选择四项');
+    }
+    console.log("Received values of form: ", values);
   };
-
-  const websiteOptions = autoCompleteResult.map(website => ({
-    label: website,
-    value: website,
-  }));
-
   return (
-    <Form
-      {...formItemLayout}
-      form={form}
-      name="register"
-      onFinish={onFinish}
-      initialValues={{
-        residence: ['zhejiang', 'hangzhou', 'xihu'],
-        prefix: '86',
-      }}
-      scrollToFirstError
-    >
-      <Form.Item
-        name="email"
-        label="E-mail"
-        rules={[
-          {
-            type: 'email',
-            message: 'The input is not valid E-mail!',
-          },
-          {
-            required: true,
-            message: 'Please input your E-mail!',
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-
-      <Form.Item
-        name="password"
-        label="Password"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your password!',
-          },
-        ]}
-        hasFeedback
-      >
-        <Input.Password />
-      </Form.Item>
-
-      <Form.Item
-        name="confirm"
-        label="Confirm Password"
-        dependencies={['password']}
-        hasFeedback
-        rules={[
-          {
-            required: true,
-            message: 'Please confirm your password!',
-          },
-          ({ getFieldValue }) => ({
-            validator(_, value) {
-              if (!value || getFieldValue('password') === value) {
-                return Promise.resolve();
-              }
-              return Promise.reject(new Error('The two passwords that you entered do not match!'));
-            },
-          }),
-        ]}
-      >
-        <Input.Password />
-      </Form.Item>
-
-      <Form.Item
-        name="nickname"
-        label="Nickname"
-        tooltip="What do you want others to call you?"
-        rules={[{ required: true, message: 'Please input your nickname!', whitespace: true }]}
-      >
-        <Input />
-      </Form.Item>
-
-      <Form.Item
-        name="residence"
-        label="Habitual Residence"
-        rules={[
-          { type: 'array', required: true, message: 'Please select your habitual residence!' },
-        ]}
-      >
-        <Cascader options={residences} />
-      </Form.Item>
-
-      <Form.Item
-        name="phone"
-        label="Phone Number"
-        rules={[{ required: true, message: 'Please input your phone number!' }]}
-      >
-        <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
-      </Form.Item>
-
-      <Form.Item
-        name="website"
-        label="Website"
-        rules={[{ required: true, message: 'Please input website!' }]}
-      >
-        <AutoComplete options={websiteOptions} onChange={onWebsiteChange} placeholder="website">
-          <Input />
-        </AutoComplete>
-      </Form.Item>
-
-      <Form.Item label="Captcha" extra="We must make sure that your are a human.">
-        <Row gutter={8}>
-          <Col span={12}>
-            <Form.Item
-              name="captcha"
-              noStyle
-              rules={[{ required: true, message: 'Please input the captcha you got!' }]}
-            >
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Button>Get captcha</Button>
-          </Col>
-        </Row>
-      </Form.Item>
-
-      <Form.Item
-        name="agreement"
-        valuePropName="checked"
-        rules={[
-          {
-            validator: (_, value) =>
-              value ? Promise.resolve() : Promise.reject(new Error('Should accept agreement')),
-          },
-        ]}
-        {...tailFormItemLayout}
-      >
-        <Checkbox>
-          {/* I have read the <a href="">agreement</a> */}
-        </Checkbox>
-      </Form.Item>
-      <Form.Item {...tailFormItemLayout}>
-        <Button type="primary" htmlType="submit">
-          Register
-        </Button>
-      </Form.Item>
-    </Form>
+    <div className={styles.inner}>
+      <div className={styles.contentWrap}>
+        <h2 className={styles.titleText}>注册</h2>
+        <Form
+          name="register" // 表单名称
+          {...formItemLayout} // 布局
+          onFinish={handleOnFinish} // 提交表单且数据验证成功后回调事件
+        >
+          <Form.Item
+            name="account"
+            label="账号"
+            rules={[
+              {
+                type: "number",
+                message: "请输入数字",
+              },
+              {
+                required: true,
+                message: "请输入你的账号!",
+              },
+            ]}
+          >
+            <Input placeholder={"很重要, 这是你的唯一标识"} />
+          </Form.Item>
+          <Form.Item
+            name="nickName"
+            label="昵称"
+            rules={[
+              {
+                required: true,
+                message: "请输入你的昵称!",
+              },
+            ]}
+          >
+            <Input placeholder={"彰显你的个性"} />
+          </Form.Item>
+          <Form.Item
+            name="college"
+            label="学院"
+            rules={[
+              {
+                required: true,
+                message: "请输入你所在的学院!",
+              },
+            ]}
+          >
+            <Input placeholder={"输入自己的归属地"} />
+          </Form.Item>
+          <Form.Item name="weChat_number" label="微信">
+            <Input placeholder={"微信号，手机号，QQ至少填写一项"} />
+          </Form.Item>
+          <Form.Item
+            name="phone_number"
+            label="手机号"
+            rules={[
+              {
+                type: "number",
+                message: "请输入数字",
+              },
+            ]}
+          >
+            <Input placeholder={"微信号，手机号，QQ至少填写一项"} />
+          </Form.Item>
+          <Form.Item
+            name="qq_number"
+            label="QQ"
+            rules={[
+              {
+                type: "number",
+                message: "请输入数字",
+              },
+            ]}
+          >
+            <Input placeholder={"微信号，手机号，QQ至少填写一项"} />
+          </Form.Item>
+          <Form.Item
+            name="avatar"
+            label="头像上传"
+            valuePropName="fileList"
+            getValueFromEvent={normFile}
+            extra="请在上传前使用ps或者QQ截图对图片进行裁剪，才会不变形，更美观。推荐 750*750px（像素）"
+          >
+            <Upload name="logo" action="/upload.do" listType="picture">
+              <Button icon={<UploadOutlined />}>Click to upload</Button>
+            </Upload>
+          </Form.Item>
+          <Form.Item
+            wrapperCol={{
+              span: 14,
+              offset: 6,
+            }}
+          >
+            <Button type="primary" htmlType="submit" block={true}>
+              提交
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
+    </div>
   );
 };
 
