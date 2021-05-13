@@ -1,6 +1,7 @@
 import styles from "./styles.moudle.less";
 import {
   Form,
+  Cascader,
   Select,
   Button,
   Upload,
@@ -8,8 +9,8 @@ import {
   message,
   Input,
 } from "antd";
+import { SubType, NavType,SellerLabel } from '../../utils/interface';
 import { UploadOutlined } from "@ant-design/icons";
-import {SellerLabel} from '../../common/interface';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -34,13 +35,13 @@ const normFile = (e: any) => {
 
 const ReleaseGoods = () => {
   const handleOnFinish = (values: any) => {
-    const { phone_number, qq_number, weChat_number, seller_label } = values;
-    if (!phone_number && !qq_number && !weChat_number) {
+    const { phoneNumber, qqNumber, weChatNumber, sellerLabel } = values;
+    if (!phoneNumber && !qqNumber && !weChatNumber) {
       // 如果手机号码 QQ号码 微信号 都没有填写， 报错
       message.error("微信号，手机号，QQ至少填写一项");
     }
-    if(seller_label.length >4) {
-      message.error('标签最多选择四项');
+    if (sellerLabel.length > 4) {
+      message.error("标签最多选择四项");
     }
     console.log("Received values of form: ", values);
   };
@@ -90,11 +91,36 @@ const ReleaseGoods = () => {
             />
           </Form.Item>
           <Form.Item
+            name="category"
+            label="类别"
+            rules={[
+              {
+                required: true,
+                message: "请选择商品类别!",
+              },
+            ]}
+            >
+            <Cascader
+              options={[
+                {
+                  value: SubType.Electronics,
+                  label: "数码产品",
+                  children: [
+                    {
+                      value: NavType.MobilePhone,
+                      label: "手机",
+                    },
+                  ],
+                },
+              ]}
+            />
+          </Form.Item>
+          <Form.Item
             name="price"
             label="标价"
             rules={[
               {
-                type: "number",
+                type: "string",
                 message: "请输入数字",
               },
               {
@@ -110,7 +136,7 @@ const ReleaseGoods = () => {
             label="原价"
             rules={[
               {
-                type: "number",
+                type: "string",
                 message: "请输入数字",
               },
               {
@@ -126,7 +152,7 @@ const ReleaseGoods = () => {
             />
           </Form.Item>
           <Form.Item
-            name="seller_label"
+            name="sellerLabel"
             label="卖家标签"
             rules={[
               {
@@ -136,8 +162,12 @@ const ReleaseGoods = () => {
               },
             ]}
           >
-            <Select mode="multiple" maxTagCount={4} placeholder="请选择您商品适合的标签">
-            <Option value={SellerLabel.Genuine}>原装正品</Option>
+            <Select
+              mode="multiple"
+              maxTagCount={4}
+              placeholder="请选择您商品适合的标签"
+            >
+              <Option value={SellerLabel.Genuine}>原装正品</Option>
               <Option value={SellerLabel.NoDisassembly}>无拆无修</Option>
               <Option value={SellerLabel.Guaranteed}>如假包换</Option>
               <Option value={SellerLabel.FixedPrice}>一口价</Option>
@@ -160,15 +190,15 @@ const ReleaseGoods = () => {
           >
             <Input placeholder={"填写数字"} />
           </Form.Item>
-          <Form.Item name="weChat_number" label="微信">
+          <Form.Item name="weChatNumber" label="微信">
             <Input placeholder={"微信号，手机号，QQ至少填写一项"} />
           </Form.Item>
           <Form.Item
-            name="phone_number"
+            name="phoneNumber"
             label="手机号"
             rules={[
               {
-                type: "number",
+                type: "string",
                 message: "请输入数字",
               },
             ]}
@@ -176,11 +206,11 @@ const ReleaseGoods = () => {
             <Input placeholder={"微信号，手机号，QQ至少填写一项"} />
           </Form.Item>
           <Form.Item
-            name="qq_number"
+            name="qqNumber"
             label="QQ"
             rules={[
               {
-                type: "number",
+                type: "string",
                 message: "请输入数字",
               },
             ]}
@@ -204,7 +234,7 @@ const ReleaseGoods = () => {
               offset: 6,
             }}
           >
-            <Button type="primary" htmlType="submit" block={true}>
+            <Button type="primary" htmlType="submit" block>
               提交
             </Button>
           </Form.Item>

@@ -1,13 +1,14 @@
-import { memo } from "react";
-import { Avatar } from "antd";
-import { NavLink } from "react-router-dom";
-import styles from "./styles.moudle.less";
+import { memo } from 'react'
+import { Avatar } from 'antd'
+import { NavLink } from 'react-router-dom'
+import { isLogin } from '../../common'
+import styles from './styles.moudle.less'
 
 const ProductDetail = () => {
   return (
     <div className={styles.infoWrap}>
       <div className={styles.topInfo}>
-        <Avatar src="https://api.youzixy.com/public/uploads/avatar/5e167620008b8.jpg" />
+        <Avatar src='https://api.youzixy.com/public/uploads/avatar/5e167620008b8.jpg' />
         <span className={styles.userName}>17688736121</span>
       </div>
       <div className={styles.infoTitle}>卡西欧G-shock.T400系列，最高版本</div>
@@ -16,7 +17,7 @@ const ProductDetail = () => {
       </div>
       <div className={styles.infoItem}>
         <div className={styles.iconWrap}>
-          <span className="iconfont">&#xe7b2;</span>
+          <span className='iconfont'>&#xe7b2;</span>
         </div>
         <div className={styles.price}>
           <span>238元</span>
@@ -25,7 +26,7 @@ const ProductDetail = () => {
       </div>
       <div className={styles.infoItem}>
         <div className={styles.iconWrap}>
-          <span className="iconfont">&#xe7b2;</span>
+          <span className='iconfont'>&#xe7b2;</span>
         </div>
         <div className={styles.itemTagWrap}>
           <div className={styles.itemTagContent}>
@@ -41,28 +42,32 @@ const ProductDetail = () => {
       </div>
       <div className={styles.infoItem}>
         <div className={styles.iconWrap}>
-          <span className="iconfont">&#xe7b2;</span>
+          <span className='iconfont'>&#xe7b2;</span>
         </div>
         <div>成都理工大学工程技术学院</div>
       </div>
       <div className={styles.infoItem}>
         <div className={styles.iconWrap}>
-          <span className="iconfont">&#xe7b2;</span>
+          <span className='iconfont'>&#xe7b2;</span>
         </div>
         <div>2020-01-09</div>
       </div>
       <div className={styles.infoItem}>
         <div className={styles.iconWrap}>
-          <span className="iconfont">&#xe7b2;</span>
+          <span className='iconfont'>&#xe7b2;</span>
         </div>
         <div>
-          <NavLink to="/login" className={styles.loginText}>
-            登陆后查看联系方式
-          </NavLink>
+          {isLogin() ? (
+            37219843624981
+          ) : (
+            <NavLink to='/login' className={styles.loginText}>
+              登陆后查看联系方式
+            </NavLink>
+          )}
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default memo(ProductDetail);
+export default memo(ProductDetail)

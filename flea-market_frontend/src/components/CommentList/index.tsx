@@ -1,59 +1,56 @@
-import { memo } from "react";
-import { Comment, Tooltip, List, Button, Pagination  } from "antd";
-import moment from "moment";
-import { NavLink } from "react-router-dom";
-import styles from "./styles.moudle.less";
+import { memo } from 'react'
+import { Comment, Tooltip, List, Button, Pagination } from 'antd'
+import moment from 'moment'
+import { isLogin } from '../../common'
+import styles from './styles.moudle.less'
 
 const data = [
   {
     // actions: [<span key="comment-list-reply-to-0">Reply to</span>],
-    author: "Han Solo",
-    avatar: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-    content: (
-      <p>
-        这件商品太好看啦
-      </p>
-    ),
+    author: 'Han Solo',
+    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+    content: <p>这件商品太好看啦</p>,
     datetime: (
       <Tooltip
-        title={moment().subtract(1, "days").format("YYYY-MM-DD HH:mm:ss")}
+        title={moment().subtract(1, 'days').format('YYYY-MM-DD HH:mm:ss')}
       >
-        <span>{moment().subtract(1, "days").fromNow()}</span>
+        <span>{moment().subtract(1, 'days').fromNow()}</span>
       </Tooltip>
     ),
   },
   {
     // actions: [<span key="comment-list-reply-to-0">Reply to</span>],
-    author: "Han Solo",
-    avatar: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-    content: (
-      <p>
-        这件商品我吹爆
-      </p>
-    ),
+    author: 'Han Solo',
+    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+    content: <p>这件商品我吹爆</p>,
     datetime: (
       <Tooltip
-        title={moment().subtract(2, "days").format("YYYY-MM-DD HH:mm:ss")}
+        title={moment().subtract(2, 'days').format('YYYY-MM-DD HH:mm:ss')}
       >
-        <span>{moment().subtract(2, "days").fromNow()}</span>
+        <span>{moment().subtract(2, 'days').fromNow()}</span>
       </Tooltip>
     ),
   },
-];
+]
 
 const CommentHeader = () => {
   return (
     <div className={styles.commentHeaderWrap}>
       <span>商品评价</span>
-      <NavLink to="/login">
-        <Button type="primary">
-          <span className="iconfont">&#xe7b2;</span>
+      {!isLogin() ? (
+        <Button type='primary'>
+          <span className='iconfont'>&#xe7b2;</span>
           登陆后评论
         </Button>
-      </NavLink>
+      ) : (
+        <Button type='primary'>
+          <span className='iconfont'>&#xe7b2;</span>
+          发表评论
+        </Button>
+      )}
     </div>
-  );
-};
+  )
+}
 
 const CommentFooter = () => {
   return (
@@ -66,9 +63,9 @@ const CommentFooter = () => {
 const CommentList = () => {
   return (
     <List
-      className="comment-list"
+      className='comment-list'
       header={<CommentHeader />}
-      itemLayout="horizontal"
+      itemLayout='horizontal'
       dataSource={data}
       renderItem={(item) => (
         <li className={styles.listItemWrap}>
@@ -83,7 +80,7 @@ const CommentList = () => {
       )}
       footer={<CommentFooter />}
     />
-  );
-};
+  )
+}
 
-export default memo(CommentList);
+export default memo(CommentList)
