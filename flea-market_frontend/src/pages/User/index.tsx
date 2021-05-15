@@ -1,10 +1,10 @@
-import { useState,useEffect, memo } from 'react'
+import { useState, useEffect, memo } from 'react'
 import { connect } from 'react-redux'
 import { Menu, message } from 'antd'
-import isEmpty from 'lodash/isEmpty'
-import { isLogin, getLocalStorage } from '../../common'
 import { MailOutlined, CalendarOutlined } from '@ant-design/icons'
+import { isLogin, getLocalStorage } from '../../common'
 import UserInfo from '../../components/UserInfo'
+import * as actionTypes from './store/actionCreators'
 import styles from './styles.moudle.less'
 
 enum PersonalCenter {
@@ -14,7 +14,8 @@ enum PersonalCenter {
 }
 
 const User = (props: any) => {
-  const { userInfo } = props
+  const { _isLogin, userInfo } = props
+  const { updateUserInfoDataDispatch } = props
   const localUserInfo = JSON.parse(getLocalStorage('userInfo') || '{}')
 
   const [selected, updateSelected] = useState(PersonalCenter.Info) // 选中的子路由
@@ -25,11 +26,11 @@ const User = (props: any) => {
   }
 
   useEffect(() => {
-    if(!isLogin()) {
+    if (!(_isLogin || isLogin())) {
       message.error('您尚未登录!')
       props.history.push('/') // 跳回主页
     }
-  },[props.history])
+  }, [_isLogin, props.history])
 
   return (
     <div className={styles.userInfoWrap}>
@@ -68,9 +69,10 @@ const User = (props: any) => {
       <div className={styles.contentBox}>
         {selected === PersonalCenter.Info && (
           <UserInfo
-            userInfo={isEmpty(userInfo.toJS()) ?  localUserInfo : userInfo.toJS() }
+            updateUserInfo={updateUserInfoDataDispatch}
+            userInfo={!userInfo.size ? localUserInfo : userInfo.toJS()}
             // 先从 store 中取数据 如果没有再从本地拿
-            // isEmpty 判断对象是否为空 toJS() 将一个 Immutable 数据转换为 JS 类型的数据
+            // toJS() 将一个 Immutable 数据转换为 JS 类型的数据
           />
         )}
         {selected === PersonalCenter.Goods && <span>你是傻叉</span>}
@@ -82,7 +84,16 @@ const User = (props: any) => {
 
 // 映射state到props上
 const mapStateToProps = (state: any) => ({
+  _isLogin: state.getIn(['user', 'isLogin']),
   userInfo: state.getIn(['user', 'userInfo']),
 })
 
-export default connect(mapStateToProps)(memo(User))
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    updateUserInfoDataDispatch(id: string, data: object) {
+      dispatch(actionTypes.updateUserInfo(id, data))
+    },
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(memo(User))

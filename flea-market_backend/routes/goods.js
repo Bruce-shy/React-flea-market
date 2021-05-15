@@ -7,9 +7,10 @@ const {
   findById,
   create,
   update,
+  updateViews,
   delete: del,
-  checkQuestionExist,
-  checkQuestioner,
+  checkGoodsExist,
+  checkPublisher,
 } = require('../controllers/goods')
 
 const auth = jwt({ secret })
@@ -18,10 +19,12 @@ router.get('/', find)
 
 router.post('/', auth, create)
 
-router.get('/:id', checkQuestionExist, findById)
+router.get('/:id', checkGoodsExist, findById)
 
-router.patch('/:id', auth, checkQuestionExist, checkQuestioner, update)
+router.patch('/:id', auth, checkGoodsExist, updateViews) // 更新浏览量
 
-router.delete('/:id', auth, checkQuestionExist, checkQuestioner, del)
+router.patch('/:id', auth, checkGoodsExist, checkPublisher, update)
+
+router.delete('/:id', auth, checkGoodsExist, checkPublisher, del)
 
 module.exports = router

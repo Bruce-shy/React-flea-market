@@ -2,6 +2,7 @@ import { Form, Button, Upload, Input, message } from 'antd'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import { createUserRequest } from '../../services/users'
 import { baseUrl } from '../../utils/config'
+import { normFile, uploadImageLimit } from '../../common'
 import styles from './styles.moudle.less'
 import { useState } from 'react'
 
@@ -14,32 +15,34 @@ const formItemLayout = {
   },
 }
 
-const Register = (props:any) => {
+const Register = (props: any) => {
   const [isLoading, updateIsLoading] = useState(false)
   const [avatarUrl, updateAvatarUrl] = useState('')
 
   const handleOnFinish = (values: any) => {
     const { phoneNumber, qqNumber, weChatNumber } = values
+
     if (!phoneNumber && !qqNumber && !weChatNumber) {
       // 如果手机号码 QQ号码 微信号 都没有填写， 报错
       message.error('微信号，手机号，QQ至少填写一项')
+    } else {
+      createUserRequest({ ...values, avatarUrl })
+        .then((res: any) => {
+          if (res.success) {
+            message.success(res.message)
+            props.history.push('/login')
+          } else {
+            message.error(res.message)
+          }
+        })
+        .catch((err) => {
+          message.error(err)
+        })
     }
-    createUserRequest({...values, avatarUrl}).then((res:any) => {
-      if(res.success) {
-        message.success(res.message)
-        props.history.push('/login')
-      } else {
-        message.error(res.message)
-      }
-    })
-    .catch((err) => {
-      message.error(err);
-    })
   }
 
   // 图片上传
-  const handleChange = (info: any) => {
-    console.log('info', info)
+  const handleOnChange = (info: any) => {
     if (info.file.status === 'uploading') {
       updateIsLoading(true)
       return
@@ -49,28 +52,6 @@ const Register = (props:any) => {
       updateIsLoading(false)
       updateAvatarUrl(info.file.response.url || '')
     }
-  }
-
-  // 表单处理文件上传
-  const normFile = (e: any) => {
-    if (Array.isArray(e)) {
-      return e
-    }
-
-    return e && e.fileList
-  }
-
-  // 对上传文件的限制
-  const beforeUpload = (file: any) => {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
-    if (!isJpgOrPng) {
-      message.error('你只能上传 jpg 或者 png 格式的文件!')
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2
-    if (!isLt2M) {
-      message.error('图片大小必须小于 2MB!')
-    }
-    return isJpgOrPng && isLt2M
   }
 
   // 文件上传组件
@@ -167,11 +148,11 @@ const Register = (props:any) => {
               className='avatar-uploader'
               showUploadList={false}
               action={baseUrl + '/upload'}
-              beforeUpload={beforeUpload}
-              onChange={(info) => handleChange(info)}
+              beforeUpload={uploadImageLimit} // 对上传文件的限制
+              onChange={(info) => handleOnChange(info)}
             >
               {avatarUrl ? (
-                <img src={avatarUrl} alt='avatar' style={{ height: '100%' }} />
+                <img src={avatarUrl} alt='头像' style={{ height: '100%' }} />
               ) : (
                 uploadButton
               )}

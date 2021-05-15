@@ -14,10 +14,16 @@ const userSchema = new Schema(
     releaseInformations: {
       type: [
         {
-          good: { type: Schema.Types.ObjectId, ref: 'Good' },
+          goods: { type: Schema.Types.ObjectId, ref: 'Goods' },
           buy: { type: Schema.Types.ObjectId, ref: 'Purchase' },
         },
       ],
+    },
+    goods: {
+      // 发布的商品
+      type: Schema.Types.ObjectId,
+      ref: 'Goods',
+      select: false,
     },
     weChatNumber: { type: String }, // 微信号码
     phoneNumber: { type: String }, // 手机号码

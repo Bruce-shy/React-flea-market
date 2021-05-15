@@ -1,3 +1,16 @@
+import {
+  DesktopOutlined,
+  FileTextOutlined,
+  SkinOutlined,
+  TagsOutlined,
+  RocketOutlined,
+  CustomerServiceOutlined,
+  MehOutlined,
+  ShakeOutlined,
+  NotificationOutlined,
+  TagOutlined,
+} from '@ant-design/icons'
+
 export enum SellerLabel {
   Genuine = 1, // 原装正品
   NoDisassembly = 2, //无拆无修
@@ -5,6 +18,15 @@ export enum SellerLabel {
   FixedPrice = 4, //一口价
   Negotiable = 5, //价格可谈
   Welcome = 6, //欢迎来撩
+}
+
+export const LabelName = {
+  [SellerLabel.Genuine]: '原装正品',
+  [SellerLabel.NoDisassembly]: '无拆无修',
+  [SellerLabel.Guaranteed]: '如假包换',
+  [SellerLabel.FixedPrice]: '一口价',
+  [SellerLabel.Negotiable]: '价格可谈',
+  [SellerLabel.Welcome]: '欢迎来撩',
 }
 
 export enum SubType {
@@ -68,3 +90,260 @@ export enum NavType {
   PercussionInstruments = '46', // 打击乐器
   Other = '47', // 其他
 }
+
+export const CategoryOptions = [
+  {
+    value: SubType.Electronics,
+    icon: DesktopOutlined,
+    label: '数码产品',
+    children: [
+      {
+        value: NavType.MobilePhone,
+        label: '手机',
+      },
+      {
+        value: NavType.Flat,
+        label: '平板',
+      },
+      {
+        value: NavType.EarPhone,
+        label: '耳机',
+      },
+      {
+        value: NavType.PortableBattery,
+        label: '充电宝',
+      },
+      {
+        value: NavType.MobileAccessories,
+        label: '手机配件',
+      },
+      {
+        value: NavType.ComputerAccessories,
+        label: '电脑配件',
+      },
+      {
+        value: NavType.WatchBracelet,
+        label: '手表手环',
+      },
+    ],
+  },
+  {
+    value: SubType.BooksAndTextbooks,
+    icon: FileTextOutlined,
+    label: '书籍教材',
+    children: [
+      {
+        value: NavType.Textbook,
+        label: '教科书',
+      },
+      {
+        value: NavType.Literature,
+        label: '文学',
+      },
+      {
+        value: NavType.Novel,
+        label: '小说',
+      },
+      {
+        value: NavType.Ebook,
+        label: '电子书',
+      },
+      {
+        value: NavType.EducationExamination,
+        label: '教育考试',
+      },
+      {
+        value: NavType.Comic,
+        label: '动漫',
+      },
+    ],
+  },
+  {
+    value: SubType.Clothes,
+    icon: SkinOutlined,
+    label: '衣帽鞋伞',
+    children: [
+      {
+        value: NavType.Skirt,
+        label: '裙子',
+      },
+      {
+        value: NavType.Trousers,
+        label: '裤子',
+      },
+      {
+        value: NavType.Clothes,
+        label: '衣服',
+      },
+      {
+        value: NavType.Hat,
+        label: '帽子',
+      },
+      {
+        value: NavType.Shoes,
+        label: '鞋子',
+      },
+      {
+        value: NavType.Box,
+        label: '箱子',
+      },
+      {
+        value: NavType.Bag,
+        label: '包包',
+      },
+      {
+        value: NavType.Umbrella,
+        label: '雨伞',
+      },
+    ],
+  },
+  {
+    value: SubType.TransportationTools,
+    icon: TagsOutlined,
+    label: '代步工具',
+    children: [
+      {
+        value: NavType.Bicycle,
+        label: '自行车',
+      },
+      {
+        value: NavType.RollerSkates,
+        label: '旱冰鞋',
+      },
+      {
+        value: NavType.BalanceCar,
+        label: '平衡车',
+      },
+      {
+        value: NavType.Skate,
+        label: '滑板',
+      },
+      {
+        value: NavType.ElectricVehicle,
+        label: '电动车',
+      },
+    ],
+  },
+  {
+    value: SubType.PhysicalFitness,
+    icon: RocketOutlined,
+    label: '体育健身',
+    children: [
+      {
+        value: NavType.Balls,
+        label: '球类',
+      },
+      {
+        value: NavType.Racket,
+        label: '球拍',
+      },
+      {
+        value: NavType.GymShoes,
+        label: '运动鞋',
+      },
+      {
+        value: NavType.SportsEquipment,
+        label: '运动装备',
+      },
+      {
+        value: NavType.FitnessEquipment,
+        label: '健身器材',
+      },
+    ],
+  },
+  {
+    value: SubType.HouseholdElectricAppliances,
+    icon: CustomerServiceOutlined,
+    label: '家用电器',
+    children: [
+      {
+        value: NavType.Fan,
+        label: '风扇',
+      },
+      {
+        value: NavType.Audio,
+        label: '音响',
+      },
+    ],
+  },
+  {
+    value: SubType.DailySupplies,
+    icon: MehOutlined,
+    label: '日常用品',
+    children: [
+      {
+        value: NavType.MakeupAndSkinCare,
+        label: '化妆护肤',
+      },
+      {
+        value: NavType.Gadget,
+        label: '小工具',
+      },
+      {
+        value: NavType.SchoolSupplies,
+        label: '学习用品',
+      },
+    ],
+  },
+  {
+    value: SubType.VirtualProducts,
+    icon: ShakeOutlined,
+    label: '虚拟产品',
+    children: [
+      {
+        value: NavType.AroundTheGame,
+        label: '游戏周边',
+      },
+      {
+        value: NavType.RechargeableCard,
+        label: '充值卡',
+      },
+      {
+        value: NavType.VariousAccount,
+        label: '各类账号',
+      },
+    ],
+  },
+  {
+    value: SubType.MusicalInstruments,
+    icon: NotificationOutlined,
+    label: '乐器',
+    children: [
+      {
+        value: NavType.Guitar,
+        label: '吉他',
+      },
+      {
+        value: NavType.Piano,
+        label: '钢琴',
+      },
+      {
+        value: NavType.Yukri,
+        label: '尤克里里',
+      },
+      {
+        value: NavType.ElectronicOrgan,
+        label: '电子琴',
+      },
+      {
+        value: NavType.Harmonica,
+        label: '口琴/竖笛',
+      },
+      {
+        value: NavType.PercussionInstruments,
+        label: '打击乐器',
+      },
+    ],
+  },
+  {
+    value: SubType.Other,
+    icon: TagOutlined,
+    label: '其他',
+    children: [
+      {
+        value: NavType.Other,
+        label: '其他',
+      },
+    ],
+  },
+]

@@ -32,7 +32,7 @@ const PictureSwitch = () => {
         {imgList.map((item, id) => (
           <img
             id={`cardImg${id}`}
-            alt=""
+            alt="Swiper"
             src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
             onClick={() => handleOnClick(id)}
           />

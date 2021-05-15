@@ -1,6 +1,8 @@
 import { memo, useState } from 'react'
 import { Form, Button, Upload, Input, message, Avatar } from 'antd'
-import { UserOutlined } from '@ant-design/icons'
+import { UserOutlined, LoadingOutlined } from '@ant-design/icons'
+import { baseUrl } from '../../utils/config'
+import { normFile, uploadImageLimit } from '../../common'
 import styles from './styles.moudle.less'
 
 const formItemLayout = {
@@ -12,17 +14,10 @@ const formItemLayout = {
   },
 }
 
-const normFile = (e: any) => {
-  if (Array.isArray(e)) {
-    return e
-  }
-
-  return e && e.fileList
-}
-
 const UserInfo = (props: any) => {
-  const { userInfo } = props
+  const { userInfo, updateUserInfo } = props
   const {
+    _id = '',
     avatarUrl = '',
     college,
     nickName,
@@ -31,29 +26,43 @@ const UserInfo = (props: any) => {
     qqNumber = '',
   } = userInfo
 
+  const [isLoading, updateIsLoading] = useState(false)
   const [isAllowModify, updateIsAllowModify] = useState(false)
+  const [newAvatarUrl, updateNewAvatarUrl] = useState(avatarUrl)
 
   const handleOnModify = () => {
     updateIsAllowModify(!isAllowModify)
   }
 
-  const handleOnFinish = (values: any) => {
-    const { phone_number, qq_number, weChat_number, seller_label } = values
+  // 图片上传
+  const handleOnChange = (info: any) => {
+    if (info.file.status === 'uploading') {
+      updateIsLoading(true)
+      return
+    }
+    if (info.file.status === 'done') {
+      // 上传成功
+      message.success('上传成功')
+      updateIsLoading(false)
+      updateNewAvatarUrl(info.file.response.url || '')
+    }
+  }
 
-    if (!phone_number && !qq_number && !weChat_number) {
+  const handleOnFinish = (values: any) => {
+    const { phoneNumber, qqNumber, weChatNumber } = values
+
+    if (!phoneNumber && !qqNumber && !weChatNumber) {
       // 如果手机号码 QQ号码 微信号 都没有填写， 报错
       message.error('微信号，手机号，QQ至少填写一项')
+    } else {
+      updateUserInfo(_id, { ...values, avatarUrl: newAvatarUrl })
     }
-    if (seller_label.length > 4) {
-      message.error('标签最多选择四项')
-    }
-    console.log('Received values of form: ', values)
   }
 
   return (
     <Form
       className={styles.formWrap}
-      name='register' // 表单名称
+      name='userInfo_update' // 表单名称
       {...formItemLayout} // 布局
       onFinish={handleOnFinish} // 提交表单且数据验证成功后回调事件
     >
@@ -63,13 +72,24 @@ const UserInfo = (props: any) => {
         valuePropName='fileList'
         getValueFromEvent={normFile}
       >
-        <Upload name='logo' action='/upload.do' listType='picture'>
-          <Avatar size={48} icon={<UserOutlined />} src={avatarUrl} />
+        <Upload
+          name='file'
+          maxCount={1}
+          action={baseUrl + '/upload'}
+          listType='picture'
+          disabled={!isAllowModify}
+          showUploadList={false} // 是否展示上传文件列表
+          beforeUpload={uploadImageLimit} // 对上传文件的限制
+          onChange={(info) => handleOnChange(info)}
+        >
+          <Avatar size={48} icon={<UserOutlined />} src={newAvatarUrl} />
+          {isLoading && <LoadingOutlined />}
         </Upload>
       </Form.Item>
       <Form.Item
         name='nickName'
         label='昵称'
+        initialValue={nickName}
         rules={[
           {
             required: true,
@@ -77,15 +97,12 @@ const UserInfo = (props: any) => {
           },
         ]}
       >
-        <Input
-          placeholder={'想一个好名字吧'}
-          defaultValue={nickName}
-          disabled={!isAllowModify}
-        />
+        <Input placeholder={'想一个好名字吧'} disabled={!isAllowModify} />
       </Form.Item>
       <Form.Item
         name='college'
         label='学院'
+        initialValue={college}
         rules={[
           {
             required: true,
@@ -93,22 +110,18 @@ const UserInfo = (props: any) => {
           },
         ]}
       >
-        <Input
-          placeholder={'输入自己的归属地'}
-          defaultValue={college}
-          disabled={!isAllowModify}
-        />
+        <Input placeholder={'输入自己的归属地'} disabled={!isAllowModify} />
       </Form.Item>
-      <Form.Item name='weChat_number' label='微信'>
+      <Form.Item name='weChatNumber' label='微信' initialValue={weChatNumber}>
         <Input
           placeholder={'微信号，手机号，QQ至少填写一项'}
-          defaultValue={weChatNumber}
           disabled={!isAllowModify}
         />
       </Form.Item>
       <Form.Item
-        name='phone_number'
+        name='phoneNumber'
         label='手机号'
+        initialValue={phoneNumber}
         rules={[
           {
             type: 'number',
@@ -118,13 +131,13 @@ const UserInfo = (props: any) => {
       >
         <Input
           placeholder={'微信号，手机号，QQ至少填写一项'}
-          defaultValue={phoneNumber}
           disabled={!isAllowModify}
         />
       </Form.Item>
       <Form.Item
-        name='qq_number'
+        name='qqNumber'
         label='QQ'
+        initialValue={qqNumber}
         rules={[
           {
             type: 'number',
@@ -134,7 +147,6 @@ const UserInfo = (props: any) => {
       >
         <Input
           placeholder={'微信号，手机号，QQ至少填写一项'}
-          defaultValue={qqNumber}
           disabled={!isAllowModify}
         />
       </Form.Item>

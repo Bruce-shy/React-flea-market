@@ -3,9 +3,14 @@ import { connect } from 'react-redux'
 import { Form, Input, Button, Checkbox, Modal } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { NavLink } from 'react-router-dom'
-import styles from './styles.moudle.less'
-
+import {
+  isLogin,
+  getLocalStorage,
+  setLocalStorage,
+  clearLocalStorage,
+} from '../../common'
 import * as actionTypes from '../User/store/actionCreators'
+import styles from './styles.moudle.less'
 
 const ModalTitle = () => {
   return (
@@ -16,19 +21,19 @@ const ModalTitle = () => {
 }
 
 const Login = (props: any) => {
-  const { isLogin } = props
+  const { _isLogin } = props
   const { getLoginDataDispatch, getUserInfoDataDispatch } = props
 
   const [isModalVisible, updateIsModalVisible] = useState(false)
-  const [account, updateAccount] = useState('')
+  const [account, updateAccount] = useState(getLocalStorage('userName'))
 
   useEffect(() => {
     // 如果登录成功
-    if (isLogin) {
+    if (_isLogin || isLogin()) {
       props.history.push('/goods') // 跳转回首页
       getUserInfoDataDispatch(account)
     }
-  }, [account, getLoginDataDispatch, getUserInfoDataDispatch, isLogin, props])
+  }, [_isLogin, account, getLoginDataDispatch, getUserInfoDataDispatch, props])
 
   const handleShowModal = () => {
     updateIsModalVisible(true)
@@ -45,6 +50,11 @@ const Login = (props: any) => {
   const onFinish = (values: any) => {
     updateAccount(values.account)
     getLoginDataDispatch(values)
+    if (values.remember) {
+      setLocalStorage('userName', values.account)
+    } else {
+      clearLocalStorage('userName')
+    }
   }
 
   return (
@@ -62,6 +72,7 @@ const Login = (props: any) => {
           <Form.Item
             name='account'
             rules={[{ required: true, message: '请输入你的学号!' }]}
+            initialValue={account}
           >
             <Input
               prefix={<UserOutlined className='site-form-item-icon' />}
@@ -117,18 +128,19 @@ const Login = (props: any) => {
 }
 
 const mapStateToProps = (state: any) => ({
-  // isLogin: state.user.isLogin 不使用 immutable 的写法
-  isLogin: state.getIn(['user', 'isLogin']),
+  // _isLogin: state.user.isLogin 不使用 immutable 的写法
+  _isLogin: state.getIn(['user', 'isLogin']),
 })
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    getLoginDataDispatch(values: any) {
-      dispatch(actionTypes.getLogin(values))
+    getLoginDataDispatch(data: any) {
+      dispatch(actionTypes.getLogin(data))
     },
-    getUserInfoDataDispatch(values: any) {
-      dispatch(actionTypes.getUserInfo(values))
+    getUserInfoDataDispatch(id: string, data: object) {
+      dispatch(actionTypes.getUserInfo(id, data))
     },
   }
 }
+
 export default connect(mapStateToProps, mapDispatchToProps)(memo(Login))

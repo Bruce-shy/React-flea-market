@@ -5,7 +5,7 @@ const Router = require('koa-router')
 const router = new Router({ prefix: usersPrefix })
 const {
   find,
-  findById,
+  findByAccount,
   create,
   checkOwner,
   update,
@@ -41,9 +41,9 @@ router.get('/', find)
 // router.post('/', auth, create);
 router.post('/', create)
 
-router.get('/:id', findById)
+router.get('/:id', findByAccount)
 
-router.patch('/:id', auth, checkOwner, update)
+router.patch('/:id', auth, checkOwner, update) // 确保自己只能改自己的信息 patch 更新资源部分内容
 
 router.delete('/:id', auth, checkOwner, del)
 

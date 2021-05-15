@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const { Schema, model } = mongoose
 
-const goodSchema = new Schema(
+const goodsSchema = new Schema(
   {
     __v: { type: Number, select: false }, // 版本
     title: { type: String, required: true }, // 标题
@@ -14,7 +14,7 @@ const goodSchema = new Schema(
       required: true,
       select: false,
     },
-    avatarUrl: { type: Array }, // 图片地址
+    imageUrl: { type: Array }, // 图片地址
     category: { type: Array, require: true }, // 分类
     price: { type: String, require: true }, // 标价
     originPrice: { type: String, require: true }, // 原价
@@ -23,8 +23,9 @@ const goodSchema = new Schema(
     weChatNumber: { type: String }, // 微信号码
     phoneNumber: { type: String }, // 手机号码
     qqNumber: { type: String }, // QQ号码
+    views: { type: Number, default: 0 }, // 浏览量
   },
   { timestamps: true }
 )
 
-module.exports = model('Good', goodSchema)
+module.exports = model('Goods', goodsSchema)

@@ -12,7 +12,7 @@ const commentSchema = new Schema(
       required: true,
       select: false,
     }, // 评论人
-    goodId: { type: String, required: true }, // 商品 Id
+    goodsId: { type: String, required: true }, // 商品 Id
   },
   { timestamps: true }
 )

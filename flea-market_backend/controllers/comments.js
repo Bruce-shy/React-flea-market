@@ -7,19 +7,20 @@ class CommentController {
     const page = Math.max(ctx.query.page * 1, 1) - 1
     const perPage = Math.max(per_page * 1, 1)
     const q = new RegExp(ctx.query.q)
-    const { goodId } = ctx.params
+    const { goodsId } = ctx.params
     const { rootCommentId } = ctx.query
     ctx.body = await Comment.find({
       content: q,
-      goodId,
+      goodsId,
       rootCommentId,
     })
       .limit(perPage)
       .skip(page * perPage)
       .populate('commentator replyTo')
   }
-  // 根据id查找
-  async findById(ctx) {
+
+  // 根据商品id查找评论
+  async findByGoodsId(ctx) {
     const { fields } = ctx.query
     const selectFields =
       fields &&
@@ -28,25 +29,41 @@ class CommentController {
         .filter((f) => f)
         .map((f) => ' +' + f)
         .join('')
-    const comment = await Comment.findById(ctx.params.id)
+    const comment = await Comment.findOne({ goodsId: ctx.params.id })
       .select(selectFields)
-      .populate('commentator')
-    ctx.body = comment
+      // .populate('commentator')
+      console.log('dsadfafas');
+    if (!comment) {
+      ctx.body = {
+        code: 404,
+        success: false,
+        message: '评论不存在',
+      }
+    } else {
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: '加载成功',
+        data: comment,
+      }
+    }
   }
+
   // 创建评论
   async create(ctx) {
     ctx.verifyParams({
       content: { type: 'string', required: true },
     })
-    const commentator = ctx.state.user._id // 只能在登录了以后拿？
-    const { goodId } = ctx.params
+    const commentator = ctx.state.user._id // 只能在登录了以后拿？评论人
+    const { goodsId } = ctx.params
     const comment = await new Comment({
       ...ctx.request.body,
       commentator,
-      goodId,
+      goodsId,
     }).save()
     ctx.body = comment
   }
+
   // 核对评论
   async checkCommentator(ctx, next) {
     const { comment } = ctx.state
@@ -55,6 +72,7 @@ class CommentController {
     }
     await next()
   }
+
   // 修改评论
   async update(ctx) {
     ctx.verifyParams({
@@ -65,6 +83,7 @@ class CommentController {
     await ctx.state.comment.update({ content })
     ctx.body = ctx.state.comment
   }
+
   // 删除评论
   async delete(ctx) {
     const comment = await Comment.findByIdAndRemove(ctx.params.id)

@@ -1,15 +1,24 @@
-const Good = require('../models/goods')
+const Goods = require('../models/goods')
 
-class GoodController {
+class GoodsController {
+  // 查找全部
   async find(ctx) {
     const { per_page = 10 } = ctx.query
     const page = Math.max(ctx.query.page * 1, 1) - 1
     const perPage = Math.max(per_page * 1, 1)
-    const q = new RegExp(ctx.query.q)
-    ctx.body = await Good.find({ $or: [{ title: q }, { description: q }] })
+    const goodsList = await Goods.find()
+      .populate('publisher')
       .limit(perPage)
       .skip(page * perPage)
+    ctx.body = {
+      code: 200,
+      success: true,
+      message: '加载成功',
+      data: goodsList,
+    }
   }
+
+  // 根据 id 查找 商品
   async findById(ctx) {
     const { fields } = ctx.query
     const selectFields =
@@ -19,29 +28,59 @@ class GoodController {
         .filter((f) => f)
         .map((f) => ' +' + f)
         .join('')
-    const good = await Good.findById(ctx.params.id)
+    const goods = await Goods.findById(ctx.params.id)
       .select(selectFields)
-      .populate('questioner topics')
-    ctx.body = good
+      .populate('publisher')
+    if (!goods) {
+      ctx.body = {
+        code: 404,
+        success: false,
+        message: '查找失败',
+      }
+    } else {
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: '查找成功',
+        data: goods,
+      }
+    }
   }
+
+  // 创建商品信息
   async create(ctx) {
     ctx.verifyParams({
       title: { type: 'string', required: true },
-      description: { type: 'string', required: false },
+      brief: { type: 'string', required: true },
+      category: { type: 'array', required: true },
+      price: { type: 'string', required: true },
+      originPrice: { type: 'string', required: true },
+      sellerLabel: { type: 'array', required: true },
+      postage: { type: 'string', required: true },
     })
-    const good = await new Good({
+    const publisher = ctx.state.user._id
+    const goods = await new Goods({
       ...ctx.request.body,
-      questioner: ctx.state.user._id,
+      publisher,
     }).save()
-    ctx.body = good
+    ctx.body = {
+      code: 200,
+      success: true,
+      message: '发布成功',
+      data: goods,
+    }
   }
-  async checkQuestioner(ctx, next) {
-    const { question } = ctx.state
-    if (question.questioner.toString() !== ctx.state.user._id) {
+
+  // 核对发布者信息
+  async checkPublisher(ctx, next) {
+    const { goods } = ctx.state
+    if (goods.publisher.toString() !== ctx.state.user._id) {
       ctx.throw(403, '无权限')
     }
     await next()
   }
+
+  // 更新商品信息
   async update(ctx) {
     ctx.verifyParams({
       title: { type: 'string', required: false },
@@ -50,21 +89,46 @@ class GoodController {
     await ctx.state.question.update(ctx.request.body)
     ctx.body = ctx.state.question
   }
+
+  // 更新商品浏览量 每次浏览量 +1 (只有登录了才计算浏览量 防止刷浏览量)
+  async updateViews(ctx) {
+    const newGoods = await Goods.findByIdAndUpdate(
+      ctx.params.id,
+      { views: ctx.state.goods.views + 1 },
+      {
+        new: true,
+      }
+    ) // new: true 返回修改后的数据
+    ctx.body = {
+      code: 200,
+      success: true,
+      message: '更新成功',
+      data: newGoods,
+    }
+  }
+
   async delete(ctx) {
-    const good = await Good.findByIdAndRemove(ctx.params.id)
-    if (!good) {
+    const goods = await Goods.findByIdAndRemove(ctx.params.id)
+    if (!goods) {
       ctx.throw(404, '问题不存在')
     }
     ctx.status = 204
   }
-  async checkQuestionExist(ctx, next) {
-    const good = await Good.findById(ctx.params.id).select('+questioner')
-    if (!good) {
-      ctx.throw(404, '问题不存在')
+
+  // 核对商品是否存在
+  async checkGoodsExist(ctx, next) {
+    const goods = await Goods.findById(ctx.params.id)
+    if (!goods) {
+      ctx.body = {
+        code: 404,
+        success: false,
+        message: '未找到对应商品',
+      }
+    } else {
+      ctx.state.goods = goods
+      await next()
     }
-    ctx.state.good = good
-    await next()
   }
 }
 
-module.exports = new GoodController()
+module.exports = new GoodsController()

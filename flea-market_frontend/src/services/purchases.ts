@@ -1,19 +1,19 @@
 import { get, post, patch } from '../utils/request'
 
 /**
- * 获取列表
+ * 获取所有求购信息
  * @param {*} page
  */
-// export function listApi(page = 1) {
-//   return get("/api/v1/admin/users", { page, per: 10 });
-// }
+export const getPurchaseListRequest = (page = 1) => {
+  return get('/purchases', { page, per: 10 })
+}
 
 /**
- * 创建用户
+ * 发布求购信息
  * @param {*} data
  */
-export const createUserRequest = (data: any) => {
-  return post('/users', data)
+export const createPurchaseRequest = (data: any) => {
+  return post('/purchases', data)
 }
 
 /**

@@ -40,7 +40,7 @@ axiosInstance.interceptors.response.use(
  * @param {*} url     请求地址
  * @param {*} params  url参数
  */
-export const get = (url: string, params: any) => {
+export const get = (url: string, params: object) => {
   return axiosInstance.get(url, {
     params,
   })
@@ -51,16 +51,16 @@ export const get = (url: string, params: any) => {
  * @param {*} url     请求地址
  * @param {*} data    数据
  */
-export const post = (url: string, data: any) => {
+export const post = (url: string, data: object) => {
   return axiosInstance.post(url, data)
 }
 
 /**
- * put请求
+ * put请求 (用于更新一条记录 用于更新某个较为完整的资源)
  * @param {*} url     请求地址
  * @param {*} data    数据
  */
-export const put = (url: string, data: any) => {
+export const put = (url: string, data: object) => {
   return axiosInstance.put(url, data)
 }
 
@@ -70,4 +70,13 @@ export const put = (url: string, data: any) => {
  */
 export const del = (url: string) => {
   return axiosInstance.delete(url)
+}
+
+/**
+ * patch 请求 (用于更新一条记录 用于资源的部分内容的更新)
+ * @param {*} url     请求地址
+ * @param {*} data    数据
+ */
+export const patch = (url: string, data: object) => {
+  return axiosInstance.patch(url, data)
 }

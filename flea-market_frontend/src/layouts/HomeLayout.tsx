@@ -6,14 +6,16 @@ import { NavLink } from 'react-router-dom'
 import { Avatar } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import LinkCard from '../components/LinkCard'
-import { isLogin } from '../common'
+import { isLogin, getLocalStorage } from '../common'
 import logo from '../assets/logo.png'
 
 import * as actionTypes from '../pages/User/store/actionCreators'
 
 const Home = (props: any) => {
-  const { _isLogin, route, location } = props
+  const { _isLogin, userInfo, route, location } = props
   const { getLogoutDataDispatch } = props
+  const localUserInfo = JSON.parse(getLocalStorage('userInfo') || '{}')
+  const { avatarUrl } = !userInfo.size ? localUserInfo : userInfo.toJS()
 
   const [publishDisplay, updatePublishDisplay] = useState(false)
   const [linkCardVisible, updateLinkCardVisible] = useState(false)
@@ -52,16 +54,6 @@ const Home = (props: any) => {
           </NavLink>
         </TabBarLeft>
         <TabBarRight>
-          <NavLink
-            to={location.pathname}
-            onMouseEnter={handleOnMouseEnter}
-            onMouseLeave={handleOnMouseLeave}
-          >
-            <TabItem>
-              <span className='tabItem-hover'>发布</span>
-              <span className='iconfont'>&#xe7b2;</span>
-            </TabItem>
-          </NavLink>
           {!(_isLogin || isLogin()) ? (
             <NavLink to='/login' activeClassName='selected'>
               <TabItem>
@@ -74,11 +66,22 @@ const Home = (props: any) => {
             </NavLink>
           ) : (
             <>
+              <NavLink
+                to={location.pathname}
+                onMouseEnter={handleOnMouseEnter}
+                onMouseLeave={handleOnMouseLeave}
+              >
+                <TabItem>
+                  <span className='tabItem-hover'>发布</span>
+                  <span className='iconfont'>&#xe7b2;</span>
+                </TabItem>
+              </NavLink>
               <NavLink to='/user/info' activeClassName='selected'>
                 <TabItem>
                   <Avatar
                     style={{ marginRight: '12px' }}
                     icon={<UserOutlined />}
+                    src={avatarUrl}
                   />
                   <span className='tabItem-hover'>个人中心</span>
                 </TabItem>
@@ -100,6 +103,7 @@ const Home = (props: any) => {
 
 const mapStateToProps = (state: any) => ({
   _isLogin: state.getIn(['user', 'isLogin']),
+  userInfo: state.getIn(['user', 'userInfo']),
 })
 
 const mapDispatchToProps = (dispatch: any) => {

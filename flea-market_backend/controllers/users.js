@@ -5,7 +5,6 @@ const jsonwebtoken = require('jsonwebtoken')
 const { secret } = require('../utils/config')
 class UserController {
   // verifyParams 校验请求体参数
-
   // 查找所有用户
   async find(ctx) {
     const { per_page = 10 } = ctx.query
@@ -16,8 +15,8 @@ class UserController {
       .skip(page * perPage)
   }
 
-  // 根据 id 查找用户信息
-  async findById(ctx) {
+  // 根据 账号 查找用户信息
+  async findByAccount(ctx) {
     const { fields } = ctx.query
     const selectFields =
       fields &&
@@ -26,24 +25,11 @@ class UserController {
         .filter((f) => f)
         .map((f) => ' +' + f)
         .join('')
-    const populateStr =
-      fields &&
-      fields
-        .split(';')
-        .filter((f) => f)
-        .map((f) => {
-          if (f === 'releaseInformations') {
-            return 'releaseInformations.good releaseInformations.buy'
-          }
-          return f
-        })
-        .join(' ')
-
     // populate 填充查询 (连接查询)
     // findById 通过 _id 查询 findOne 通过某一项查询
-    const user = await User.findOne({account: ctx.params.id})
+    const user = await User.findOne({ account: ctx.params.id })
       .select(selectFields)
-      .populate(populateStr)
+      .populate('goods')
     if (!user) {
       ctx.body = {
         code: 404,
@@ -84,30 +70,42 @@ class UserController {
       }
     }
   }
+
+  // 确保自己只能改自己的信息
   async checkOwner(ctx, next) {
     if (ctx.params.id !== ctx.state.user._id) {
       ctx.throw(403, '没有权限')
     }
     await next()
   }
+
+  // 更新用户信息
   async update(ctx) {
     ctx.verifyParams({
       account: { type: 'string', required: false },
       password: { type: 'string', required: false },
       avatar_url: { type: 'string', required: false },
-      gender: { type: 'string', required: false },
-      headline: { type: 'string', required: false },
-      locations: { type: 'array', itemType: 'string', required: false },
-      business: { type: 'string', required: false },
-      employments: { type: 'array', itemType: 'object', required: false },
-      educations: { type: 'array', itemType: 'object', required: false },
     })
-    const user = await User.findByIdAndUpdate(ctx.params.id, ctx.request.body)
+    // ctx.params.id === /:id
+    const user = await User.findByIdAndUpdate(ctx.params.id, ctx.request.body, {
+      new: true,
+    }) // new: true 返回修改后的数据
     if (!user) {
-      ctx.throw(404, '用户不存在')
+      ctx.body = {
+        code: 404,
+        success: false,
+        message: '用户不存在',
+      }
+    } else {
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: '更新成功',
+        data: user,
+      }
     }
-    ctx.body = user
   }
+
   async delete(ctx) {
     const user = await User.findByIdAndRemove(ctx.params.id)
     if (!user) {

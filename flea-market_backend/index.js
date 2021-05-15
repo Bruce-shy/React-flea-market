@@ -15,6 +15,9 @@ mongoose.connect(
   { useUnifiedTopology: true, useNewUrlParser: true },
   () => console.log('成功连接 mongodb! ')
 )
+
+mongoose.set('useFindAndModify', false);
+
 mongoose.connection.on('error', console.error)
 
 // 静态文件
