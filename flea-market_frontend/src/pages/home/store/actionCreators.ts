@@ -5,6 +5,7 @@ import {
   getGoodsListRequest,
   getGoodsInfoRequest,
   getCommentListRequest,
+  getGoodsListByCategoryRequest,
 } from '../../../services/goods'
 
 // 商品列表
@@ -25,14 +26,37 @@ export const changeCommentList = (data: any) => ({
   data: fromJS(data),
 })
 
+// 商品id
+export const changeGoodsId = (data: any) => ({
+  type: actionTypes.CHANGE_GOODS_ID,
+  data,
+})
+
+// 商品类别
+export const changeCategory = (data: any) => ({
+  type: actionTypes.CHANGE_CATEGORY,
+  data: fromJS(data),
+})
+
+// page
+export const changePage = (data: any) => ({
+  type: actionTypes.CHANGE_PAGE,
+  data: fromJS(data),
+})
+
 // 获取所有商品信息
-export const getGoodsList = (remind = true) => {
+export const getGoodsList = (page = 1, remind = true) => {
   return (dispatch: any) => {
+    dispatch(changePage(page)) // 修改 page
     if (remind) {
       const messageHide = message.loading('加载中', 0) // 全局loading 异步自行移除
-      getGoodsListRequest()
+      getGoodsListRequest(page)
         .then((res: any) => {
           messageHide()
+          if (res.data.length === 0) {
+            message.error('没有更多数据了')
+            return
+          }
           if (res.success) {
             dispatch(changeGoodsList(res.data))
             message.success(res.message)
@@ -40,8 +64,9 @@ export const getGoodsList = (remind = true) => {
             message.error(res.message)
           }
         })
-        .catch((err) => {
-          message.error(err)
+        .catch((err: any) => {
+          messageHide()
+          message.error(err.message)
         })
     } else {
       // 隐式更新 不被用户觉察
@@ -60,6 +85,33 @@ export const getGoodsList = (remind = true) => {
   }
 }
 
+// 根据category获取相关商品信息
+export const getGoodsListByCategory = (page = 1, category: Array<string>) => {
+  return (dispatch: any) => {
+    const messageHide = message.loading('加载中', 0) // 全局loading 异步自行移除
+    dispatch(changePage(page)) // 修改 page
+    dispatch(changeCategory(category)) // 修改类别
+    getGoodsListByCategoryRequest(page, category)
+      .then((res: any) => {
+        messageHide()
+        if (res.data.length === 0) {
+          message.error('没有更多数据了')
+          return
+        }
+        if (res.success) {
+          dispatch(changeGoodsList(res.data))
+          message.success(res.message)
+        } else {
+          message.error(res.message)
+        }
+      })
+      .catch((err: any) => {
+        messageHide()
+        message.error(err.message)
+      })
+  }
+}
+
 // 获取商品详情
 export const getGoodsInfo = (id: string, data: object) => {
   return (dispatch: any) => {
@@ -69,13 +121,15 @@ export const getGoodsInfo = (id: string, data: object) => {
         messageHide()
         if (res.success) {
           message.success(res.message)
+          dispatch(changeGoodsId(id))
           dispatch(changeGoodsInfo(res.data))
         } else {
           message.error(res.message)
         }
       })
       .catch((err) => {
-        message.error(err)
+        messageHide()
+        message.error(err.message)
       })
   }
 }
@@ -86,7 +140,7 @@ export const getCommentList = (id: string, data: object) => {
     getCommentListRequest(id, data)
       .then((res: any) => {
         if (res.success) {
-          console.log('评论信息',res)
+          console.log('评论信息', res)
           dispatch(changeCommentList(res.data))
         } else {
           console.log(res.message)

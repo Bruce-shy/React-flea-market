@@ -11,20 +11,6 @@ const userSchema = new Schema(
     avatarUrl: { type: String }, // 头像地址
     nickName: { type: String, required: true }, // 昵称
     college: { type: String, required: true }, // 学院
-    releaseInformations: {
-      type: [
-        {
-          goods: { type: Schema.Types.ObjectId, ref: 'Goods' },
-          buy: { type: Schema.Types.ObjectId, ref: 'Purchase' },
-        },
-      ],
-    },
-    goods: {
-      // 发布的商品
-      type: Schema.Types.ObjectId,
-      ref: 'Goods',
-      select: false,
-    },
     weChatNumber: { type: String }, // 微信号码
     phoneNumber: { type: String }, // 手机号码
     qqNumber: { type: String }, // QQ号码

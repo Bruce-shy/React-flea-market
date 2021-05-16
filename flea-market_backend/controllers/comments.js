@@ -29,10 +29,9 @@ class CommentController {
         .filter((f) => f)
         .map((f) => ' +' + f)
         .join('')
-    const comment = await Comment.findOne({ goodsId: ctx.params.id })
+    const comment = await Comment.find({ goodsId: ctx.params.id })
       .select(selectFields)
-      // .populate('commentator')
-      console.log('dsadfafas');
+      .populate('commentator')
     if (!comment) {
       ctx.body = {
         code: 404,
@@ -52,16 +51,21 @@ class CommentController {
   // 创建评论
   async create(ctx) {
     ctx.verifyParams({
+      rate: { type: 'number', require: true},
       content: { type: 'string', required: true },
     })
     const commentator = ctx.state.user._id // 只能在登录了以后拿？评论人
-    const { goodsId } = ctx.params
     const comment = await new Comment({
       ...ctx.request.body,
       commentator,
-      goodsId,
+      goodsId:ctx.params.id,
     }).save()
-    ctx.body = comment
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: '创建成功',
+        data: comment,
+      }
   }
 
   // 核对评论

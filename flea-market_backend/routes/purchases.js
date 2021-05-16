@@ -7,8 +7,11 @@ const {
   findById,
   create,
   update,
+  delete: del,
   listTopicFollowers,
   checkTopicExist,
+  checkPurchaseExist,
+  checkPublisher,
   listQuestions,
 } = require('../controllers/purchases')
 
@@ -25,5 +28,7 @@ router.patch('/:id', auth, checkTopicExist, update)
 router.get('/:id/followers', checkTopicExist, listTopicFollowers)
 
 router.get('/:id/questions', checkTopicExist, listQuestions)
+
+router.delete('/:id', auth, checkPurchaseExist, checkPublisher, del) // 删除商品信息
 
 module.exports = router

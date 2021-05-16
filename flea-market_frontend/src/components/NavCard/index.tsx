@@ -6,24 +6,18 @@ import styles from './styles.moudle.less'
 
 const { SubMenu } = Menu
 
-const NavCard = ({ handleOnCardVisible }: any) => {
+const NavCard = ({ goodsList, onSelect, page }: any) => {
   const handleClick = (e: any) => {
-    console.log('click', e)
+    onSelect(page, e.keyPath.reverse())
   }
   return (
     <>
       <Menu onClick={handleClick} style={{ width: 256 }} mode='vertical'>
         {CategoryOptions.map((item: any) => {
           return (
-            <SubMenu
-              key={item.value}
-              icon={<item.icon />}
-              title={item.label}
-            >
-              {item.children.map((item :any) => {
-                return (
-                  <Menu.Item key={item.value}>{item.label}</Menu.Item>
-                )
+            <SubMenu key={item.value} icon={<item.icon />} title={item.label}>
+              {item.children.map((item: any) => {
+                return <Menu.Item key={item.value}>{item.label}</Menu.Item>
               })}
             </SubMenu>
           )

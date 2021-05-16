@@ -45,8 +45,10 @@ const Purchase = (props: any) => {
         itemLayout='vertical'
         size='small'
         pagination={{
-          onChange: (page) => {
-            console.log(page)
+          total:40,
+          showSizeChanger:false,
+          onChange: (page:number) => {
+            getPurchaseListDataDispatch(page)
           },
           pageSize: 4,
         }}
@@ -104,8 +106,8 @@ const mapStateToProps = (state: any) => ({
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    getPurchaseListDataDispatch() {
-      dispatch(actionTypes.getPurchaseList())
+    getPurchaseListDataDispatch(page:number) {
+      dispatch(actionTypes.getPurchaseList(page))
     },
   }
 }

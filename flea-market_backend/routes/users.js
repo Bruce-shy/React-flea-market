@@ -19,6 +19,8 @@ const {
   followTopic,
   unfollowTopic,
   listFollowingTopic,
+  listUserPublishGoods,
+  listUserPublishPurchase,
   // listQuestions,
   // likingAnswer,
   // unlikingAnswer,
@@ -50,6 +52,10 @@ router.delete('/:id', auth, checkOwner, del)
 router.post('/login', login)
 
 router.get('/:id/following', listFollowing)
+
+router.get('/:id/publishGoods', checkUserExist, listUserPublishGoods) // 获取用户发布的商品
+
+router.get('/:id/publishPurchase', checkUserExist, listUserPublishPurchase) // 获取用户发布的求购
 
 router.get('/:id/followers', listFollowers)
 

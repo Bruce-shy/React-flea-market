@@ -1,11 +1,11 @@
-import { get, post, patch } from '../utils/request'
+import { get, post, patch, del } from '../utils/request'
 
 /**
  * 获取所有求购信息
  * @param {*} page
  */
 export const getPurchaseListRequest = (page = 1) => {
-  return get('/purchases', { page, per: 10 })
+  return get('/purchases', { page, per_page: 4 })
 }
 
 /**
@@ -31,4 +31,13 @@ export const getUserInfoRequest = (id: string, data: object) => {
  */
 export const updateUserInfoRequest = (id: string, data: object) => {
   return patch(`/users/${id}`, data)
+}
+
+/**
+ * 删除求购信息
+ * @param {*} id
+ * @param {*} data
+ */
+export const deletePurchaseInfoRequest = (id: string) => {
+  return del(`/purchases/${id}`)
 }

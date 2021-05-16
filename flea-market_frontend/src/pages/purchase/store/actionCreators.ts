@@ -9,6 +9,7 @@ export const changeEnterLoading = (data: any) => ({
   type: actionTypes.CHANGE_ENTER_LOADING,
   data,
 })
+
 // 求购信息
 export const changePurchaseList = (data: any) => ({
   type: actionTypes.CHANGE_PURCHASE_LIST,
@@ -16,16 +17,19 @@ export const changePurchaseList = (data: any) => ({
 })
 
 // 获取所有求购信息
-export const getPurchaseList = (remind = true) => {
+export const getPurchaseList = (page = 1, remind = true) => {
   return (dispatch: any) => {
     const messageHide = message.loading('加载中', 0) // 全局loading 异步自行移除
-    getPurchaseListRequest()
+    getPurchaseListRequest(page)
       .then((res: any) => {
         messageHide()
-        console.log('res成功', res)
+        dispatch(changeEnterLoading(false))
         if (res.success) {
+          if (res.data.length === 0) {
+            message.error('没有更多数据了')
+            return
+          }
           dispatch(changePurchaseList(res.data))
-          dispatch(changeEnterLoading(false))
           if (remind) {
             message.success(res.message)
           }
@@ -36,7 +40,9 @@ export const getPurchaseList = (remind = true) => {
         }
       })
       .catch((err) => {
-        message.error(err)
+        messageHide()
+        dispatch(changeEnterLoading(false))
+        message.error(err.message)
       })
   }
 }

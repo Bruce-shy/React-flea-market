@@ -2,11 +2,13 @@ import { memo, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Form, Select, Button, Upload, Input, message } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
-import { isLogin, normFile } from '../../common'
+import { useHistory } from 'react-router-dom'
+import { isLogin, getLocalStorage, normFile } from '../../common'
 import { baseUrl } from '../../utils/config'
 import { SellerLabel, LabelName } from '../../utils/interface'
 import { createPurchaseRequest } from '../../services/purchases'
-import * as actionTypes from '../Purchase/store/actionCreators'
+import * as purchaseActionTypes from '../Purchase/store/actionCreators'
+import * as userActionTypes from '../User/store/actionCreators'
 import styles from './styles.moudle.less'
 
 const { TextArea } = Input
@@ -22,10 +24,14 @@ const formItemLayout = {
 
 const ReleaseBuy = (props: any) => {
   // 取别名操作
-  const { isLogin: _isLogin } = props
-  const { getPurchaseListDataDispatch } = props
+  const { isLogin: _isLogin, userInfo } = props
+  const { getPurchaseListDataDispatch, getUserPublishPurchaseDataDispatch } =
+    props
+  const localUserInfo = JSON.parse(getLocalStorage('userInfo') || '{}')
+  const history = useHistory()
 
   const [imageList, updateImageList] = useState([])
+  const [_userInfo] = useState(!userInfo.size ? localUserInfo : userInfo.toJS())
 
   const handleOnchange = ({ fileList }: any) => {
     updateImageList(fileList)
@@ -42,27 +48,25 @@ const ReleaseBuy = (props: any) => {
       message.error('标签最多选择四项')
     } else {
       // 尽量在最后一次处理 以提升性能
-      console.log(
-        'Received values of form: ',
-        values,
-        imageList.map((m: any) => m?.response?.url)
-      )
-      console.log('大sb', {
-        ...values,
-        imageUrl: imageList.map((m: any) => m?.response?.url),
-      })
       createPurchaseRequest({
         ...values,
         imageUrl: imageList.map((m: any) => m?.response?.url),
+        account: _userInfo.account,
       })
         .then((res: any) => {
-          console.log(res)
-          message.success(res.message)
-          getPurchaseListDataDispatch() // 发布成功 重新获取求购数据
-          props.history.push('/buy')
+          if (res.success) {
+            message.success(res.message)
+            getPurchaseListDataDispatch(1,false) // 发布成功 重新获取求购数据
+            getUserPublishPurchaseDataDispatch(
+             _userInfo.account,
+            ) // 发布成功 重新获取用户个人求购数据
+            history.push('/buy')
+          } else {
+            message.error(res.message)
+          }
         })
-        .catch((err) => {
-          message.error(err)
+        .catch((err: any) => {
+          message.error(err.message)
         })
     }
   }
@@ -70,9 +74,9 @@ const ReleaseBuy = (props: any) => {
   useEffect(() => {
     if (!(_isLogin || isLogin())) {
       message.error('您尚未登录!')
-      props.history.push('/') // 跳回主页
+      history.push('/') // 跳回主页
     }
-  }, [_isLogin, props.history])
+  }, [_isLogin, history])
 
   return (
     <div className={styles.inner}>
@@ -212,12 +216,16 @@ const ReleaseBuy = (props: any) => {
 
 const mapStateToProps = (state: any) => ({
   isLogin: state.getIn(['user', 'isLogin']),
+  userInfo: state.getIn(['user', 'userInfo']),
 })
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    getPurchaseListDataDispatch() {
-      dispatch(actionTypes.getPurchaseList())
+    getPurchaseListDataDispatch(page:number, remind: boolean) {
+      dispatch(purchaseActionTypes.getPurchaseList(page,remind))
+    },
+    getUserPublishPurchaseDataDispatch(id: string, data: object) {
+      dispatch(userActionTypes.getUserPublishPurchase(id, data))
     },
   }
 }

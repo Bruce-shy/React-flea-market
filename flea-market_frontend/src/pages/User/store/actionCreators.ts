@@ -5,6 +5,8 @@ import * as actionTypes from './constants'
 import {
   getUserInfoRequest,
   updateUserInfoRequest,
+  getUserPublishGoodsRequest,
+  getUserPublishPurchaseRequest,
 } from '../../../services/users'
 import { setLocalStorage, clearLocalStorage } from '../../../common'
 import { loginRequest } from '../../../services/auth'
@@ -18,8 +20,21 @@ export const changeLoginStatus = (data: any) => ({
   data,
 })
 
+// 用户信息
 export const changeUserInfo = (data: any) => ({
   type: actionTypes.CHANGE_USERINFO,
+  data: fromJS(data),
+})
+
+// 发布的商品信息
+export const changeMyGoods = (data: any) => ({
+  type: actionTypes.CHANGE_MYGOODS,
+  data: fromJS(data),
+})
+
+// 发布的求购信息
+export const changeMyPurchase = (data: any) => ({
+  type: actionTypes.CHANGE_MYPURCHASE,
   data: fromJS(data),
 })
 
@@ -40,7 +55,8 @@ export const getLogin = ({ account, password }: any) => {
         }
       })
       .catch((err) => {
-        message.error(err)
+        messageHide()
+        message.error(err.message)
       })
   }
 }
@@ -62,16 +78,15 @@ export const getUserInfo = (id: string, data: object) => {
     getUserInfoRequest(id, data)
       .then((res: any) => {
         if (res.success) {
-          console.log('ressssss',res)
           dispatch(changeUserInfo(res.data))
           // 每次请求后在本地存储数据 存本地的原因 在用户第一次登录时获取用户信息
           setLocalStorage('userInfo', JSON.stringify(res.data))
         } else {
-          message.error(res.message)
+          console.log(res.message)
         }
       })
       .catch((err) => {
-        message.error(err)
+        console.log(err)
       })
   }
 }
@@ -82,8 +97,8 @@ export const updateUserInfo = (id: string, data: object) => {
     updateUserInfoRequest(id, data)
       .then((res: any) => {
         if (res.success) {
-          dispatch(getPurchaseList(false)) // 当用户更新信息时，重新获取求购数据 (因为不跳转页面 让用户不感知 不提示 remind = false)
-          dispatch(getGoodsList(false)) // 同上
+          dispatch(getPurchaseList(1, false)) // 当用户更新信息时，重新获取求购数据 (因为不跳转页面 让用户不感知 不提示 remind = false)
+          dispatch(getGoodsList(1, false)) // 同上
           message.success(res.message)
           dispatch(changeUserInfo(res.data))
           // 更新本地数据
@@ -93,7 +108,47 @@ export const updateUserInfo = (id: string, data: object) => {
         }
       })
       .catch((err) => {
-        message.error(err)
+        message.error(err.message)
+      })
+  }
+}
+
+// 获取用户发布的商品
+export const getUserPublishGoods = (id: string, data: object) => {
+  return (dispatch: any) => {
+    getUserPublishGoodsRequest(id, data)
+      .then((res: any) => {
+        if (res.success) {
+          console.log('商品', res)
+          dispatch(changeMyGoods(res.data))
+          // 每次请求后在本地存储数据 存本地的原因 在用户第一次登录时获取用户信息
+          setLocalStorage('myGoods', JSON.stringify(res.data))
+        } else {
+          console.log(res.message)
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+}
+
+// 获取用户发布的求购
+export const getUserPublishPurchase = (id: string, data: object) => {
+  return (dispatch: any) => {
+    getUserPublishPurchaseRequest(id, data)
+      .then((res: any) => {
+        if (res.success) {
+          console.log('求购', res)
+          dispatch(changeMyPurchase(res.data))
+          // 每次请求后在本地存储数据 存本地的原因 在用户第一次登录时获取用户信息
+          setLocalStorage('myPurchase', JSON.stringify(res.data))
+        } else {
+          console.log(res.message)
+        }
+      })
+      .catch((err) => {
+        console.log(err)
       })
   }
 }

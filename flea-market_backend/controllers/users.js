@@ -1,6 +1,6 @@
 const User = require('../models/users')
-// const Question = require('../models/questions');
-// const Answer = require('../models/answers');
+const Goods = require('../models/goods');
+const Purchase = require('../models/purchases');
 const jsonwebtoken = require('jsonwebtoken')
 const { secret } = require('../utils/config')
 class UserController {
@@ -26,7 +26,7 @@ class UserController {
         .map((f) => ' +' + f)
         .join('')
     // populate 填充查询 (连接查询)
-    // findById 通过 _id 查询 findOne 通过某一项查询
+    // findById 通过 _id 查询 findOne 通过关键字查询 且只返回一个
     const user = await User.findOne({ account: ctx.params.id })
       .select(selectFields)
       .populate('goods')
@@ -143,6 +143,44 @@ class UserController {
     }
   }
 
+  // 获取用户发布商品
+  async listUserPublishGoods(ctx) {
+    const goods = await Goods.find({ account: ctx.params.id}) // 返回所有匹配的项目 为数组
+    if(!goods) {
+      ctx.body = {
+        code: 404,
+        success: false,
+        message: '用户未发布商品',
+      }
+    } else {
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: '查找成功',
+        data: goods,
+      }
+    }
+  }
+
+  // 获取用户发布求购
+  async listUserPublishPurchase(ctx) {
+    const purchase = await Purchase.find({ account: ctx.params.id})
+    if(!purchase) {
+      ctx.body = {
+        code: 404,
+        success: false,
+        message: '用户未发布求购',
+      }
+    } else {
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: '查找成功',
+        data: purchase,
+      }
+    }
+  }
+
   async listFollowing(ctx) {
     const user = await User.findById(ctx.params.id)
       .select('+following')
@@ -152,17 +190,26 @@ class UserController {
     }
     ctx.body = user.following
   }
+
   async listFollowers(ctx) {
     const users = await User.find({ following: ctx.params.id })
     ctx.body = users
   }
+
+  // 核对用户是否存在
   async checkUserExist(ctx, next) {
-    const user = await User.findById(ctx.params.id)
+    const user = await User.findOne({ account: ctx.params.id})
     if (!user) {
-      ctx.throw(404, '用户不存在')
-    }
+      ctx.body = {
+        code: 404,
+        success: false,
+        message: '用户不存在',
+      }
+    } else {
     await next()
+    }
   }
+
   async follow(ctx) {
     const me = await User.findById(ctx.state.user._id).select('+following')
     if (!me.following.map((id) => id.toString()).includes(ctx.params.id)) {

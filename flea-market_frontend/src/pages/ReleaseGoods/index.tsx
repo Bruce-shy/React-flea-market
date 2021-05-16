@@ -11,11 +11,13 @@ import {
   Input,
 } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
-import { isLogin, normFile } from '../../common'
+import { useHistory } from 'react-router-dom'
+import { isLogin, getLocalStorage, normFile } from '../../common'
 import { baseUrl } from '../../utils/config'
 import { SellerLabel, LabelName, CategoryOptions } from '../../utils/interface'
 import { createGoodsRequest } from '../../services/goods'
-import * as actionTypes from '../Home/store/actionCreators'
+import * as goodsActionTypes from '../Home/store/actionCreators'
+import * as useraAtionTypes from '../User/store/actionCreators'
 import styles from './styles.moudle.less'
 
 const { TextArea } = Input
@@ -30,10 +32,13 @@ const formItemLayout = {
 }
 
 const ReleaseGoods = (props: any) => {
-  const { _isLogin } = props
-  const { getGoodsListDataDispatch } = props
+  const { _isLogin, userInfo } = props
+  const { getGoodsListDataDispatch, getUserPublishGoodsDataDispatch } = props
+  const localUserInfo = JSON.parse(getLocalStorage('userInfo') || '{}')
+  const history = useHistory()
 
   const [imageList, updateImageList] = useState([])
+  const [_userInfo] = useState(!userInfo.size ? localUserInfo : userInfo.toJS())
 
   const handleOnchange = ({ fileList }: any) => {
     updateImageList(fileList)
@@ -52,15 +57,22 @@ const ReleaseGoods = (props: any) => {
       createGoodsRequest({
         ...values,
         imageUrl: imageList.map((m: any) => m?.response?.url),
+        account: _userInfo.account,
       })
         .then((res: any) => {
-          console.log('res', res)
-          message.success(res.message)
-          getGoodsListDataDispatch() // 发布成功 重新获取商品数据
-          props.history.push('/goods')
+          if (res.success) {
+            message.success(res.message)
+            getGoodsListDataDispatch() // 发布成功 重新获取商品数据
+            getUserPublishGoodsDataDispatch(
+              _userInfo.account,
+            ) // 发布成功 重新获取用户个人商品数据
+            history.push('/goods')
+          } else {
+            message.error(res.message)
+          }
         })
-        .catch((err) => {
-          message.error(err)
+        .catch((err: any) => {
+          message.error(err.message)
         })
     }
   }
@@ -68,9 +80,9 @@ const ReleaseGoods = (props: any) => {
   useEffect(() => {
     if (!(_isLogin || isLogin())) {
       message.error('您尚未登录!')
-      props.history.push('/') // 跳回主页
+      history.push('/') // 跳回主页
     }
-  }, [_isLogin, props.history])
+  }, [_isLogin, history])
 
   return (
     <div className={styles.inner}>
@@ -286,12 +298,16 @@ const ReleaseGoods = (props: any) => {
 
 const mapStateToProps = (state: any) => ({
   _isLogin: state.getIn(['user', 'isLogin']),
+  userInfo: state.getIn(['user', 'userInfo']),
 })
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
     getGoodsListDataDispatch() {
-      dispatch(actionTypes.getGoodsList())
+      dispatch(goodsActionTypes.getGoodsList())
+    },
+    getUserPublishGoodsDataDispatch(id: string, data: object) {
+      dispatch(useraAtionTypes.getUserPublishGoods(id, data))
     },
   }
 }

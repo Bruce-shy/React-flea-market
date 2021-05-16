@@ -1,5 +1,6 @@
 import { Form, Button, Upload, Input, message } from 'antd'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
+import { useHistory } from 'react-router-dom'
 import { createUserRequest } from '../../services/users'
 import { baseUrl } from '../../utils/config'
 import { normFile, uploadImageLimit } from '../../common'
@@ -16,6 +17,7 @@ const formItemLayout = {
 }
 
 const Register = (props: any) => {
+  const history = useHistory()
   const [isLoading, updateIsLoading] = useState(false)
   const [avatarUrl, updateAvatarUrl] = useState('')
 
@@ -30,13 +32,13 @@ const Register = (props: any) => {
         .then((res: any) => {
           if (res.success) {
             message.success(res.message)
-            props.history.push('/login')
+            history.push('/login')
           } else {
             message.error(res.message)
           }
         })
-        .catch((err) => {
-          message.error(err)
+        .catch((err: any) => {
+          message.error(err.message)
         })
     }
   }

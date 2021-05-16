@@ -6,7 +6,7 @@ const defaultState = fromJS({
   isLogin: false,
   userInfo: {},
   myGoods: [],
-  myPurchases: [],
+  myPurchase: [],
 })
 
 const reducer = (state = defaultState, action: any) => {
@@ -19,8 +19,8 @@ const reducer = (state = defaultState, action: any) => {
       return state.set('userInfo', action.data)
     case actionTypes.CHANGE_MYGOODS:
       return state.set('myGoods', action.data)
-    case actionTypes.CHANGE_MYPURCHASES:
-      return state.set('myPurchases', action.data)
+    case actionTypes.CHANGE_MYPURCHASE:
+      return state.set('myPurchase', action.data)
     default:
       return state
   }

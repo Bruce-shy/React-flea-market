@@ -17,7 +17,7 @@ const {
 
 const auth = jwt({ secret })
 
-router.post('/', auth, create) // 需要登录了才能创建 从而取得 ctx.state.user._id 的值
+router.post('/:id', auth, create) // 需要登录了才能创建 从而取得 ctx.state.user._id 的值
 
 router.get('/:id', findByGoodsId)
 

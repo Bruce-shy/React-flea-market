@@ -2,7 +2,7 @@ import { memo, useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { Form, Input, Button, Checkbox, Modal } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useHistory } from 'react-router-dom'
 import {
   isLogin,
   getLocalStorage,
@@ -22,7 +22,13 @@ const ModalTitle = () => {
 
 const Login = (props: any) => {
   const { _isLogin } = props
-  const { getLoginDataDispatch, getUserInfoDataDispatch } = props
+  const {
+    getLoginDataDispatch,
+    getUserInfoDataDispatch,
+    getUserPublishGoodsDataDispatch,
+    getUserPublishPurchaseDataDispatch,
+  } = props
+  const history = useHistory()
 
   const [isModalVisible, updateIsModalVisible] = useState(false)
   const [account, updateAccount] = useState(getLocalStorage('userName'))
@@ -30,10 +36,12 @@ const Login = (props: any) => {
   useEffect(() => {
     // 如果登录成功
     if (_isLogin || isLogin()) {
-      props.history.push('/goods') // 跳转回首页
+      history.push('/goods') // 跳转回首页
       getUserInfoDataDispatch(account)
+      getUserPublishGoodsDataDispatch(account)
+      getUserPublishPurchaseDataDispatch(account)
     }
-  }, [_isLogin, account, getLoginDataDispatch, getUserInfoDataDispatch, props])
+  }, [_isLogin, account, getUserInfoDataDispatch, getUserPublishGoodsDataDispatch, getUserPublishPurchaseDataDispatch, history])
 
   const handleShowModal = () => {
     updateIsModalVisible(true)
@@ -139,6 +147,12 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     getUserInfoDataDispatch(id: string, data: object) {
       dispatch(actionTypes.getUserInfo(id, data))
+    },
+    getUserPublishGoodsDataDispatch(id: string, data: object) {
+      dispatch(actionTypes.getUserPublishGoods(id, data))
+    },
+    getUserPublishPurchaseDataDispatch(id: string, data: object) {
+      dispatch(actionTypes.getUserPublishPurchase(id, data))
     },
   }
 }

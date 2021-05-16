@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { Card } from 'antd'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useHistory } from 'react-router-dom'
 import styles from './styles.moudle.less'
 
 const { Meta } = Card
@@ -9,39 +9,44 @@ const cardStyle = {
   minHeight: 300,
 }
 
-const CardDesc = (props:any) => {
+const CardDesc = (props: any) => {
   const { brief } = props
-  return (
-    <p className={styles.cardDesc}>
-        {brief}
-    </p>
-  )
+  return <p className={styles.cardDesc}>{brief}</p>
 }
 
-const DisplayCard = (props: { data: any }) => {
+//下面这句必须写在组件里面
+
+const DisplayCard = (props: any) => {
   const { data } = props
+  const history = useHistory()
+
+  const handleOnSkip = () => {
+    history.push(`/goods_detail?${data?._id}`)
+  }
+
   return (
-    <NavLink to={`/goods_detail?${data._id}`}>
-      <Card
-        hoverable
-        style={cardStyle}
-        cover={
-          data.imageUrl.length && <img alt={data.title} src={data.imageUrl[0]} />
-        }
-      >
-        <Meta title={data.title} description={<CardDesc brief={data.brief}/>} />
-        <div className={styles.cardInfo}>
-          <span>更新于{data.updatedAt.substr(0, 10)}</span>
-          <span>{data.views ? data.views: 0}人浏览</span>
-        </div>
-        <div className={styles.cardInfo}>
-          <span className={styles.cardAmount}>{data.price}</span>
-          <NavLink to={`/goods_detail?${data._id}`} activeClassName='selected'>
-            软件学院
-          </NavLink>
-        </div>
-      </Card>
-    </NavLink>
+    <Card
+      onClick={handleOnSkip}
+      hoverable
+      style={cardStyle}
+      cover={
+        data?.imageUrl?.length && (
+          <img alt={data.title} src={data.imageUrl[0]} />
+        )
+      }
+    >
+      <Meta title={data.title} description={<CardDesc brief={data.brief} />} />
+      <div className={styles.cardInfo}>
+        <span>更新于{data?.updatedAt?.substr(0, 10)}</span>
+        <span>{data.views ? data.views : 0}人浏览</span>
+      </div>
+      <div className={styles.cardInfo}>
+        <span className={styles.cardAmount}>{data.price}</span>
+        <NavLink to={`/goods_detail?${data._id}`} activeClassName='selected'>
+          软件学院
+        </NavLink>
+      </div>
+    </Card>
   )
 }
 

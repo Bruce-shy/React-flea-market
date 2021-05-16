@@ -25,6 +25,22 @@ export const getUserInfoRequest = (id: string, data: object) => {
 }
 
 /**
+ * 根据id获取用户发布的商品
+ * @param {*} id
+ */
+ export const getUserPublishGoodsRequest = (id: string, data: object) => {
+  return get(`/users/${id}/publishGoods`, data)
+}
+
+/**
+ * 根据id获取用户发布的求购
+ * @param {*} id
+ */
+ export const getUserPublishPurchaseRequest = (id: string, data: object) => {
+  return get(`/users/${id}/publishPurchase`, data)
+}
+
+/**
  * 更新个人信息
  * @param {*} id
  * @param {*} data

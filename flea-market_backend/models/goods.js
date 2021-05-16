@@ -7,6 +7,7 @@ const goodsSchema = new Schema(
     __v: { type: Number, select: false }, // 版本
     title: { type: String, required: true }, // 标题
     brief: { type: String, required: true }, // 简介
+    account: { type: String, require: true}, // 发布人账号
     publisher: {
       // 发布人
       type: Schema.Types.ObjectId,

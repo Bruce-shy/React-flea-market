@@ -1,49 +1,31 @@
-import { memo } from 'react'
-import { Comment, Tooltip, List, Button, Pagination } from 'antd'
-import moment from 'moment'
+import { useState, memo, useEffect } from 'react'
+import { Comment, List, Button, Rate, Pagination } from 'antd'
+import { useHistory } from 'react-router-dom'
 import { isLogin } from '../../common'
 import styles from './styles.moudle.less'
 
-const data = [
-  {
-    // actions: [<span key="comment-list-reply-to-0">Reply to</span>],
-    author: 'Han Solo',
-    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    content: <p>这件商品太好看啦</p>,
-    datetime: (
-      <Tooltip
-        title={moment().subtract(1, 'days').format('YYYY-MM-DD HH:mm:ss')}
-      >
-        <span>{moment().subtract(1, 'days').fromNow()}</span>
-      </Tooltip>
-    ),
-  },
-  {
-    // actions: [<span key="comment-list-reply-to-0">Reply to</span>],
-    author: 'Han Solo',
-    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    content: <p>这件商品我吹爆</p>,
-    datetime: (
-      <Tooltip
-        title={moment().subtract(2, 'days').format('YYYY-MM-DD HH:mm:ss')}
-      >
-        <span>{moment().subtract(2, 'days').fromNow()}</span>
-      </Tooltip>
-    ),
-  },
-]
+const CommentHeader = (props: any) => {
+  const { onClick } = props
+  const history = useHistory()
 
-const CommentHeader = () => {
+  const handleOnLogin = () => {
+    history.push('/login')
+  }
+
+  const handleOnClick = () => {
+    onClick(true)
+  }
+
   return (
     <div className={styles.commentHeaderWrap}>
       <span>商品评价</span>
       {!isLogin() ? (
-        <Button type='primary'>
+        <Button type='primary' onClick={handleOnLogin}>
           <span className='iconfont'>&#xe7b2;</span>
           登陆后评论
         </Button>
       ) : (
-        <Button type='primary'>
+        <Button type='primary' onClick={handleOnClick}>
           <span className='iconfont'>&#xe7b2;</span>
           发表评论
         </Button>
@@ -52,33 +34,68 @@ const CommentHeader = () => {
   )
 }
 
-const CommentFooter = () => {
+const CommentFooter = (props: any) => {
+  const { commentList } = props
+  const { onChangeCommentList, changePage } = props
+
+  const handleOnChange = (page: number) => {
+    changePage(page)
+    onChangeCommentList(commentList.slice((page - 1) * 5, (page - 1) * 5 + 5))
+  }
+
   return (
     <div className={styles.commentFooterWrap}>
-      <Pagination defaultCurrent={1} total={50} />
+      <Pagination
+        defaultCurrent={1}
+        total={commentList.length}
+        onChange={handleOnChange}
+        pageSize={5}
+      />
     </div>
   )
 }
 
-const CommentList = () => {
+const CommentList = (props: {
+  commentList: any
+  onClick: Function
+  page: number
+  changePage: any
+}) => {
+  const { commentList, page, changePage, onClick } = props
+  const [currentCommentList, updateCommentList] = useState(
+    commentList.slice(0, 5)
+  )
+
+  useEffect(() => {
+    updateCommentList(commentList.slice((page - 1) * 5, (page - 1) * 5 + 5))
+  }, [commentList, page])
+
+  console.log('commentList', commentList)
+  console.log('currentCommentList', currentCommentList)
   return (
     <List
       className='comment-list'
-      header={<CommentHeader />}
+      header={<CommentHeader onClick={onClick} />}
       itemLayout='horizontal'
-      dataSource={data}
-      renderItem={(item) => (
+      dataSource={currentCommentList}
+      renderItem={(item: any) => (
         <li className={styles.listItemWrap}>
-          {/* actions={item.actions} */}
           <Comment
-            author={item.author}
-            avatar={item.avatar}
-            content={item.content}
-            datetime={item.datetime}
+            author={item?.commentator?.nickName}
+            avatar={item?.commentator?.avatarUrl}
+            content={item?.content}
+            datetime={item?.updatedAt?.substr(0, 10)}
           />
+          <Rate allowHalf disabled defaultValue={item?.rate} />
         </li>
       )}
-      footer={<CommentFooter />}
+      footer={
+        <CommentFooter
+          commentList={commentList}
+          onChangeCommentList={updateCommentList}
+          changePage={changePage}
+        />
+      }
     />
   )
 }
