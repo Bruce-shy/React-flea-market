@@ -26,7 +26,7 @@ router.get('/:id', checkGoodsExist, findById)
 
 router.patch('/:id', auth, checkGoodsExist, updateViews) // 更新浏览量
 
-router.patch('/:id', auth, checkGoodsExist, checkPublisher, update)
+router.put('/:id', auth, checkGoodsExist, checkPublisher, update)
 
 router.delete('/:id', auth, checkGoodsExist, checkPublisher, del) // 删除商品信息
 

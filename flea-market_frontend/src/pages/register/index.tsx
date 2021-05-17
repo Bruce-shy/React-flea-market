@@ -3,7 +3,7 @@ import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
 import { createUserRequest } from '../../services/users'
 import { baseUrl } from '../../utils/config'
-import { normFile, uploadImageLimit } from '../../common'
+import { normFile, uploadImageLimit, isNumber, isPhoneNumber } from '../../common'
 import styles from './styles.moudle.less'
 import { useState } from 'react'
 
@@ -22,25 +22,32 @@ const Register = (props: any) => {
   const [avatarUrl, updateAvatarUrl] = useState('')
 
   const handleOnFinish = (values: any) => {
-    const { phoneNumber, qqNumber, weChatNumber } = values
 
+    const { account, phoneNumber, qqNumber, weChatNumber } = values
+
+    if (!isNumber(account)) {
+      return
+    }
+    if(!isPhoneNumber(phoneNumber)){
+      return
+    }
     if (!phoneNumber && !qqNumber && !weChatNumber) {
       // 如果手机号码 QQ号码 微信号 都没有填写， 报错
       message.error('微信号，手机号，QQ至少填写一项')
-    } else {
-      createUserRequest({ ...values, avatarUrl })
-        .then((res: any) => {
-          if (res.success) {
-            message.success(res.message)
-            history.push('/login')
-          } else {
-            message.error(res.message)
-          }
-        })
-        .catch((err: any) => {
-          message.error(err.message)
-        })
+      return
     }
+    createUserRequest({ ...values, avatarUrl })
+      .then((res: any) => {
+        if (res.success) {
+          message.success(res.message)
+          history.push('/login')
+        } else {
+          message.error(res.message)
+        }
+      })
+      .catch((err: any) => {
+        message.error(err.message)
+      })
   }
 
   // 图片上传
@@ -78,16 +85,16 @@ const Register = (props: any) => {
             label='账号'
             rules={[
               {
-                type: 'string',
-                message: '请输入数字',
-              },
-              {
                 required: true,
                 message: '请输入你的账号!',
               },
             ]}
           >
-            <Input placeholder={'很重要, 这是你的唯一标识'} />
+            <Input
+              placeholder={'很重要, 这是你的唯一标识'}
+              minLength={12}
+              maxLength={12}
+            />
           </Form.Item>
           <Form.Item
             name='name'

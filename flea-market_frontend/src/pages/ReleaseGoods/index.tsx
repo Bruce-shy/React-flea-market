@@ -6,13 +6,12 @@ import {
   Select,
   Button,
   Upload,
-  // Rate,
   message,
   Input,
 } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
-import { isLogin, getLocalStorage, normFile } from '../../common'
+import { isLogin, getLocalStorage, normFile, isPhoneNumber } from '../../common'
 import { baseUrl } from '../../utils/config'
 import { SellerLabel, LabelName, CategoryOptions } from '../../utils/interface'
 import { createGoodsRequest } from '../../services/goods'
@@ -47,6 +46,9 @@ const ReleaseGoods = (props: any) => {
   const handleOnFinish = (values: any) => {
     const { phoneNumber, qqNumber, weChatNumber, sellerLabel } = values
 
+    if (!isPhoneNumber(phoneNumber)) {
+      return
+    }
     if (!phoneNumber && !qqNumber && !weChatNumber) {
       // 如果手机号码 QQ号码 微信号 都没有填写， 报错
       message.error('微信号，手机号，QQ至少填写一项')
@@ -63,9 +65,7 @@ const ReleaseGoods = (props: any) => {
           if (res.success) {
             message.success(res.message)
             getGoodsListDataDispatch() // 发布成功 重新获取商品数据
-            getUserPublishGoodsDataDispatch(
-              _userInfo.account,
-            ) // 发布成功 重新获取用户个人商品数据
+            getUserPublishGoodsDataDispatch(_userInfo.account) // 发布成功 重新获取用户个人商品数据
             history.push('/goods')
           } else {
             message.error(res.message)

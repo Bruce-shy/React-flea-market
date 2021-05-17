@@ -96,8 +96,8 @@ class GoodsController {
   // 核对发布者信息
   async checkPublisher(ctx, next) {
     const { goods } = ctx.state
-    if (goods.publisher._id.toString() !== ctx.state.user._id) {
-      // 发布人 id 和当前登录人 ID 一样时才能进入下一步
+    if (goods.publisher._id.toString() !== ctx.state.user._id && ctx.state.user.account !== 'root') {
+      // 发布人 id 和当前登录人 ID 一样时(或者为管理员)才能进入下一步
       ctx.body = {
         code: 403,
         success: false,
@@ -111,11 +111,26 @@ class GoodsController {
   // 更新商品信息
   async update(ctx) {
     ctx.verifyParams({
-      title: { type: 'string', required: false },
-      description: { type: 'string', required: false },
+      title: { type: 'string', required: true },
+      brief: { type: 'string', required: true },
+      category: { type: 'array', required: true },
+      price: { type: 'string', required: true },
+      originPrice: { type: 'string', required: true },
+      sellerLabel: { type: 'array', required: true },
+      postage: { type: 'string', required: true },
     })
-    await ctx.state.question.update(ctx.request.body)
-    ctx.body = ctx.state.question
+    const newGoods = await Goods.findByIdAndUpdate(
+      ctx.params.id,
+      ctx.request.body,
+      {
+        new: true,
+      }
+    )
+    ctx.body = {
+      success: true,
+      message: '更新成功',
+      data: newGoods,
+    }
   }
 
   // 更新商品浏览量 每次浏览量 +1 (只有登录了才计算浏览量 防止刷浏览量)

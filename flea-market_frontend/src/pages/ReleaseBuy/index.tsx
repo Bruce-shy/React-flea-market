@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Form, Select, Button, Upload, Input, message } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
-import { isLogin, getLocalStorage, normFile } from '../../common'
+import { isLogin, getLocalStorage, normFile,isPhoneNumber } from '../../common'
 import { baseUrl } from '../../utils/config'
 import { SellerLabel, LabelName } from '../../utils/interface'
 import { createPurchaseRequest } from '../../services/purchases'
@@ -39,7 +39,9 @@ const ReleaseBuy = (props: any) => {
 
   const handleOnFinish = (values: any) => {
     const { phoneNumber, qqNumber, weChatNumber, buyerLabel } = values
-
+    if(!isPhoneNumber(phoneNumber)){
+      return
+    }
     if (!phoneNumber && !qqNumber && !weChatNumber) {
       // 如果手机号码 QQ号码 微信号 都没有填写， 报错
       message.error('微信号，手机号，QQ至少填写一项')

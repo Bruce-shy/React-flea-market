@@ -1,6 +1,6 @@
 const User = require('../models/users')
-const Goods = require('../models/goods');
-const Purchase = require('../models/purchases');
+const Goods = require('../models/goods')
+const Purchase = require('../models/purchases')
 const jsonwebtoken = require('jsonwebtoken')
 const { secret } = require('../utils/config')
 class UserController {
@@ -10,9 +10,15 @@ class UserController {
     const { per_page = 10 } = ctx.query
     const page = Math.max(ctx.query.page * 1, 1) - 1
     const perPage = Math.max(per_page * 1, 1)
-    ctx.body = await User.find({ name: new RegExp(ctx.query.q) })
+    const userList = await User.find()
       .limit(perPage)
       .skip(page * perPage)
+    ctx.body = {
+      code: 200,
+      success: true,
+      message: '加载成功',
+      data: userList.filter((item) => item.account !== 'root'), // 不返回系统管理员
+    }
   }
 
   // 根据 账号 查找用户信息
@@ -71,12 +77,20 @@ class UserController {
     }
   }
 
-  // 确保自己只能改自己的信息
+  // 确保自己(或者管理员)才能修改信息
   async checkOwner(ctx, next) {
-    if (ctx.params.id !== ctx.state.user._id) {
-      ctx.throw(403, '没有权限')
+    if (
+      ctx.params.id !== ctx.state.user._id &&
+      ctx.state.user.account !== 'root'
+    ) {
+      ctx.body = {
+        code: 403,
+        success: false,
+        message: '无权限',
+      }
+    } else {
+      await next()
     }
-    await next()
   }
 
   // 更新用户信息
@@ -109,9 +123,18 @@ class UserController {
   async delete(ctx) {
     const user = await User.findByIdAndRemove(ctx.params.id)
     if (!user) {
-      ctx.throw(404, '用户不存在')
+      ctx.body = {
+        code: 404,
+        success: false,
+        message: '用户不存在',
+      }
+    } else {
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: '修改成功',
+      }
     }
-    ctx.status = 204
   }
 
   // 用户登录
@@ -145,8 +168,8 @@ class UserController {
 
   // 获取用户发布商品
   async listUserPublishGoods(ctx) {
-    const goods = await Goods.find({ account: ctx.params.id}) // 返回所有匹配的项目 为数组
-    if(!goods) {
+    const goods = await Goods.find({ account: ctx.params.id }) // 返回所有匹配的项目 为数组
+    if (!goods) {
       ctx.body = {
         code: 404,
         success: false,
@@ -164,8 +187,8 @@ class UserController {
 
   // 获取用户发布求购
   async listUserPublishPurchase(ctx) {
-    const purchase = await Purchase.find({ account: ctx.params.id})
-    if(!purchase) {
+    const purchase = await Purchase.find({ account: ctx.params.id })
+    if (!purchase) {
       ctx.body = {
         code: 404,
         success: false,
@@ -198,7 +221,7 @@ class UserController {
 
   // 核对用户是否存在
   async checkUserExist(ctx, next) {
-    const user = await User.findOne({ account: ctx.params.id})
+    const user = await User.findOne({ account: ctx.params.id })
     if (!user) {
       ctx.body = {
         code: 404,
@@ -206,52 +229,10 @@ class UserController {
         message: '用户不存在',
       }
     } else {
-    await next()
+      await next()
     }
   }
 
-  async follow(ctx) {
-    const me = await User.findById(ctx.state.user._id).select('+following')
-    if (!me.following.map((id) => id.toString()).includes(ctx.params.id)) {
-      me.following.push(ctx.params.id)
-      me.save()
-    }
-    ctx.status = 204
-  }
-  async unfollow(ctx) {
-    const me = await User.findById(ctx.state.user._id).select('+following')
-    const index = me.following.map((id) => id.toString()).indexOf(ctx.params.id)
-    if (index > -1) {
-      me.following.splice(index, 1)
-      me.save()
-    }
-    ctx.status = 204
-  }
-  async followTopic(ctx) {
-    const me = await User.findById(ctx.state.user._id).select(
-      '+followingTopics'
-    )
-    if (
-      !me.followingTopics.map((id) => id.toString()).includes(ctx.params.id)
-    ) {
-      me.followingTopics.push(ctx.params.id)
-      me.save()
-    }
-    ctx.status = 204
-  }
-  async unfollowTopic(ctx) {
-    const me = await User.findById(ctx.state.user._id).select(
-      '+followingTopics'
-    )
-    const index = me.followingTopics
-      .map((id) => id.toString())
-      .indexOf(ctx.params.id)
-    if (index > -1) {
-      me.followingTopics.splice(index, 1)
-      me.save()
-    }
-    ctx.status = 204
-  }
   async listFollowingTopic(ctx) {
     const user = await User.findById(ctx.params.id)
       .select('+followingTopics')

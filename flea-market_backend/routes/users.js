@@ -14,10 +14,6 @@ const {
   listFollowing,
   listFollowers,
   checkUserExist,
-  follow,
-  unfollow,
-  followTopic,
-  unfollowTopic,
   listFollowingTopic,
   listUserPublishGoods,
   listUserPublishPurchase,
@@ -47,7 +43,7 @@ router.get('/:id', findByAccount)
 
 router.patch('/:id', auth, checkOwner, update) // 确保自己只能改自己的信息 patch 更新资源部分内容
 
-router.delete('/:id', auth, checkOwner, del)
+router.delete('/:id', auth, checkOwner, del) // 删除用户
 
 router.post('/login', login)
 
@@ -59,9 +55,9 @@ router.get('/:id/publishPurchase', checkUserExist, listUserPublishPurchase) // �
 
 router.get('/:id/followers', listFollowers)
 
-router.put('/following/:id', auth, checkUserExist, follow)
+// router.put('/following/:id', auth, checkUserExist, follow)
 
-router.delete('/following/:id', auth, checkUserExist, unfollow)
+// router.delete('/following/:id', auth, checkUserExist, unfollow)
 
 // router.put('/followingTopic/:id', auth, checkTopicExist, followTopic);
 

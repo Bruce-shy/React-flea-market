@@ -53,7 +53,7 @@ const HomeSwiper = () => {
   }, []);
 
   return (
-    <div className="swiper-container">
+    <div className="swiper-container" style={{height:'460px'}}>
       <div className="swiper-wrapper">
         {slider_list.map((slider) => {
           return (

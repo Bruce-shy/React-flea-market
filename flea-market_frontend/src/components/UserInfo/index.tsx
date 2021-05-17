@@ -2,7 +2,12 @@ import { memo, useState } from 'react'
 import { Form, Button, Upload, Input, message, Avatar } from 'antd'
 import { UserOutlined, LoadingOutlined } from '@ant-design/icons'
 import { baseUrl } from '../../utils/config'
-import { normFile, uploadImageLimit } from '../../common'
+import {
+  normFile,
+  uploadImageLimit,
+  isNumber,
+  isPhoneNumber,
+} from '../../common'
 import styles from './styles.moudle.less'
 
 const formItemLayout = {
@@ -49,8 +54,13 @@ const UserInfo = (props: any) => {
   }
 
   const handleOnFinish = (values: any) => {
-    const { phoneNumber, qqNumber, weChatNumber } = values
-
+    const { account, phoneNumber, qqNumber, weChatNumber } = values
+    if (!isNumber(account)) {
+      return
+    }
+    if (!isPhoneNumber(phoneNumber)) {
+      return
+    }
     if (!phoneNumber && !qqNumber && !weChatNumber) {
       // 如果手机号码 QQ号码 微信号 都没有填写， 报错
       message.error('微信号，手机号，QQ至少填写一项')
@@ -122,12 +132,6 @@ const UserInfo = (props: any) => {
         name='phoneNumber'
         label='手机号'
         initialValue={phoneNumber}
-        rules={[
-          {
-            type: 'number',
-            message: '请输入数字',
-          },
-        ]}
       >
         <Input
           placeholder={'微信号，手机号，QQ至少填写一项'}
@@ -138,12 +142,6 @@ const UserInfo = (props: any) => {
         name='qqNumber'
         label='QQ'
         initialValue={qqNumber}
-        rules={[
-          {
-            type: 'number',
-            message: '请输入数字',
-          },
-        ]}
       >
         <Input
           placeholder={'微信号，手机号，QQ至少填写一项'}

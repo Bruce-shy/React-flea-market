@@ -9,7 +9,6 @@ const {
   update,
   delete: del,
   listTopicFollowers,
-  checkTopicExist,
   checkPurchaseExist,
   checkPublisher,
   listQuestions,
@@ -21,13 +20,13 @@ router.get('/', find)
 
 router.post('/', auth, create)
 
-router.get('/:id', checkTopicExist, findById)
+router.get('/:id', checkPurchaseExist, findById)
 
-router.patch('/:id', auth, checkTopicExist, update)
+router.put('/:id', auth, checkPurchaseExist, update)
 
-router.get('/:id/followers', checkTopicExist, listTopicFollowers)
+// router.get('/:id/followers', checkPurchaseExist, listTopicFollowers)
 
-router.get('/:id/questions', checkTopicExist, listQuestions)
+// router.get('/:id/questions', checkPurchaseExist, listQuestions)
 
 router.delete('/:id', auth, checkPurchaseExist, checkPublisher, del) // 删除商品信息
 

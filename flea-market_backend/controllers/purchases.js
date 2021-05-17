@@ -30,8 +30,24 @@ class PurchaseController {
         .filter((f) => f)
         .map((f) => ' +' + f)
         .join('')
-    const topic = await Topic.findById(ctx.params.id).select(selectFields)
-    ctx.body = topic
+    const purchase = await Purchase.findById(ctx.params.id)
+      .select(selectFields)
+      .populate('publisher')
+    if (!purchase) {
+      ctx.body = {
+        code: 404,
+        success: false,
+        message: '查找失败',
+        data: purchase,
+      }
+    } else {
+      ctx.body = {
+        code: 200,
+        success: true,
+        message: '查找成功',
+        data: purchase,
+      }
+    }
   }
 
   // 创建求购信息
@@ -58,8 +74,11 @@ class PurchaseController {
   // 核对发布者信息
   async checkPublisher(ctx, next) {
     const { purchase } = ctx.state
-    // purchase.publisher._id 取得的是 Number 型数据
-    if (purchase.publisher._id.toString() != ctx.state.user._id) {
+    // purchase.publisher._id 取的是 Number 型数据
+    if (
+      purchase.publisher._id.toString() != ctx.state.user._id &&
+      ctx.state.user.account !== 'root'
+    ) {
       // 发布人 id 和当前登录人 ID 一样时才能进入下一步
       ctx.body = {
         code: 403,
@@ -73,12 +92,18 @@ class PurchaseController {
 
   async update(ctx) {
     ctx.verifyParams({
-      name: { type: 'string', required: false },
-      avatar_url: { type: 'string', required: false },
-      introduction: { type: 'string', required: false },
+      title: { type: 'string', required: true },
+      price: { type: 'string', required: true },
+      buyerLabel: { type: 'array', required: false },
     })
-    const topic = await Topic.findByIdAndUpdate(ctx.params.id, ctx.request.body)
-    ctx.body = topic
+    const purchase = await Purchase.findByIdAndUpdate(ctx.params.id, ctx.request.body,{
+      new: true,
+    })
+    ctx.body = {
+      success: true,
+      message: '更新成功',
+      data: purchase,
+    }
   }
 
   // 删除求购信息
@@ -101,7 +126,7 @@ class PurchaseController {
 
   // 核对求购信息是否存在
   async checkPurchaseExist(ctx, next) {
-    const purchase = await await Purchase.findById(ctx.params.id).populate(
+    const purchase = await Purchase.findById(ctx.params.id).populate(
       'publisher'
     )
     if (!purchase) {

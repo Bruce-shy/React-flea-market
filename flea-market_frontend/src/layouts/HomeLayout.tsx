@@ -7,9 +7,9 @@ import { Avatar } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import LinkCard from '../components/LinkCard'
 import { isLogin, getLocalStorage } from '../common'
-import logo from '../assets/logo.png'
-
 import * as actionTypes from '../pages/User/store/actionCreators'
+
+const logoUrl = 'https://nidelemonya.cn/earthLogo.jpg'
 
 const Home = (props: any) => {
   const { _isLogin, userInfo, route, location } = props
@@ -36,8 +36,9 @@ const Home = (props: any) => {
           <NavLink to='/goods'>
             <TabItem>
               <img
+                style={{height: '64px'}}
                 className='tabItem-image'
-                src={logo}
+                src={logoUrl}
                 alt='东华理工大学校园二手交易'
               />
             </TabItem>

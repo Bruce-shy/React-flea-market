@@ -8,6 +8,7 @@ import {
   getLocalStorage,
   setLocalStorage,
   clearLocalStorage,
+  isNumber,
 } from '../../common'
 import * as actionTypes from '../User/store/actionCreators'
 import styles from './styles.moudle.less'
@@ -56,6 +57,9 @@ const Login = (props: any) => {
   }
 
   const onFinish = (values: any) => {
+    if (!isNumber(values.account)) {
+      return
+    }
     updateAccount(values.account)
     getLoginDataDispatch(values)
     if (values.remember) {
@@ -85,6 +89,8 @@ const Login = (props: any) => {
             <Input
               prefix={<UserOutlined className='site-form-item-icon' />}
               placeholder='学号'
+              minLength={12}
+              maxLength={12}
             />
           </Form.Item>
           <Form.Item
