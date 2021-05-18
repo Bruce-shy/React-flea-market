@@ -8,7 +8,6 @@ const PictureSwitch = (props: { imageList: Array<string> }) => {
 
   useEffect(() => {
     // 初始化将第一个置为蓝色
-    console.log('imageList', props, imageList)
     document.querySelector('#cardImg0')?.classList.add(styles.active)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

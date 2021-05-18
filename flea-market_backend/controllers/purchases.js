@@ -140,24 +140,6 @@ class PurchaseController {
       await next()
     }
   }
-
-  async listTopicFollowers(ctx) {
-    const users = await User.find({ followingTopics: ctx.params.id })
-    ctx.body = users
-  }
-
-  async checkTopicExist(ctx, next) {
-    const topic = await Topic.findById(ctx.params.id)
-    if (!topic) {
-      ctx.throw(404, '话题不存在')
-    }
-    await next()
-  }
-
-  async listQuestions(ctx) {
-    const questions = await Question.find({ topics: ctx.params.id })
-    ctx.body = questions
-  }
 }
 
 module.exports = new PurchaseController()

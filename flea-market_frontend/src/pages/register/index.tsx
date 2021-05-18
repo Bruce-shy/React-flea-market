@@ -3,7 +3,12 @@ import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
 import { createUserRequest } from '../../services/users'
 import { baseUrl } from '../../utils/config'
-import { normFile, uploadImageLimit, isNumber, isPhoneNumber } from '../../common'
+import {
+  normFile,
+  uploadImageLimit,
+  isNumber,
+  isPhoneNumber,
+} from '../../common'
 import styles from './styles.moudle.less'
 import { useState } from 'react'
 
@@ -22,13 +27,12 @@ const Register = (props: any) => {
   const [avatarUrl, updateAvatarUrl] = useState('')
 
   const handleOnFinish = (values: any) => {
-
     const { account, phoneNumber, qqNumber, weChatNumber } = values
 
     if (!isNumber(account)) {
       return
     }
-    if(!isPhoneNumber(phoneNumber)){
+    if (!isPhoneNumber(phoneNumber)) {
       return
     }
     if (!phoneNumber && !qqNumber && !weChatNumber) {
@@ -119,7 +123,7 @@ const Register = (props: any) => {
             ]}
             hasFeedback
           >
-            <Input.Password />
+            <Input.Password minLength={6}  />
           </Form.Item>
           <Form.Item
             name='confirm'
@@ -141,7 +145,7 @@ const Register = (props: any) => {
               }),
             ]}
           >
-            <Input.Password />
+            <Input.Password minLength={6}  />
           </Form.Item>
           <Form.Item
             name='avatar'

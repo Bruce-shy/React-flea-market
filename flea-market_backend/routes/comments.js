@@ -2,7 +2,6 @@ const jwt = require('koa-jwt')
 const { commentsPrefix, secret } = require('../utils/config')
 const Router = require('koa-router')
 const router = new Router({
-  // prefix: '/questions/:questionId/answers/:answerId/comments'
   prefix: commentsPrefix,
 })
 const {
@@ -13,7 +12,6 @@ const {
   checkCommentExist,
   checkCommentator,
 } = require('../controllers/comments')
-// const { checkAnswerExist } = require('../controllers/answers');
 
 const auth = jwt({ secret })
 

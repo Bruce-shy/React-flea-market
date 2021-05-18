@@ -101,6 +101,8 @@ const Login = (props: any) => {
               prefix={<LockOutlined className='site-form-item-icon' />}
               type='password'
               placeholder='密码'
+              minLength={6}
+
             />
           </Form.Item>
           <Form.Item>

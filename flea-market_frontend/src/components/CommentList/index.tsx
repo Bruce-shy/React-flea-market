@@ -70,8 +70,6 @@ const CommentList = (props: {
     updateCommentList(commentList.slice((page - 1) * 5, (page - 1) * 5 + 5))
   }, [commentList, page])
 
-  console.log('commentList', commentList)
-  console.log('currentCommentList', currentCommentList)
   return (
     <List
       className='comment-list'

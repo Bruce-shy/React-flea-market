@@ -43,7 +43,6 @@ const GoodsDetail = (props: any) => {
   useEffect(() => {
     // 如果 store 中没有数据, 重新请求 确保拿到的数据是最新的
     if (!(goodsInfo.size && commentList.size) || goodsId !== currentGoodsId) {
-      console.log('我在执行')
       getGoodsInfoDataDispatch(currentGoodsId)
       getCommentListDataDispatch(currentGoodsId)
       updateGoodsViewsRequest(currentGoodsId, {})
@@ -59,8 +58,6 @@ const GoodsDetail = (props: any) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  console.log('真真', commentList.toJS())
-  console.log('佳佳', _commentList)
   return (
     <>
       <div className={styles.cardDetailWrap}>

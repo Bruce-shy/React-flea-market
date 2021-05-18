@@ -11,7 +11,6 @@ const DeleteCard = (props: { data: any; onDelete: Function }) => {
   const { data } = props
   const { onDelete } = props
   const { title, _id, account, price, updatedAt } = data
-  console.log('deleteCarddata', data)
 
   const handleOnDelete = () => {
     onDelete(_id, account)

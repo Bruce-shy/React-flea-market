@@ -140,7 +140,6 @@ export const getCommentList = (id: string, data: object) => {
     getCommentListRequest(id, data)
       .then((res: any) => {
         if (res.success) {
-          console.log('评论信息', res)
           dispatch(changeCommentList(res.data))
         } else {
           console.log(res.message)

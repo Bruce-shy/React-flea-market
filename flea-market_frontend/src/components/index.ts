@@ -3,6 +3,7 @@ import DeleteCard from './DeleteCard'
 import DisplayCard from './DisplayCard'
 import HomeSwiper from './HomeSwiper'
 import LinkCard from './LinkCard'
+import ModofyPassword from './ModofyPassword'
 import  NavCard from './NavCard'
 import PictureSwitch from './PictureSwitch'
 import ProductDetail from './ProductDetail'
@@ -19,3 +20,4 @@ export { PictureSwitch as PictureSwitchComponent }
 export { ProductDetail as ProductDetailComponent }
 export { UserInfo as UserInfoComponent }
 export { ReleaseComment as ReleaseCommentComponent }
+export { ModofyPassword as ModofyPasswordComponent}

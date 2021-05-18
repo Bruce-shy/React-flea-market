@@ -1,20 +1,30 @@
 import { useState, useEffect, memo } from 'react'
 import { connect } from 'react-redux'
 import { Menu, message, Empty, Button } from 'antd'
-import { MailOutlined, CalendarOutlined } from '@ant-design/icons'
+import {
+  UserOutlined,
+  ShoppingOutlined,
+  GiftOutlined,
+  LockOutlined,
+} from '@ant-design/icons'
 import isEmpty from 'lodash/isEmpty'
 import { useHistory } from 'react-router-dom'
 import { isLogin, getLocalStorage } from '../../common'
 import { deleteGoodsInfoRequest } from '../../services/goods'
 import { deletePurchaseInfoRequest } from '../../services/purchases'
-import { UserInfoComponent, DeleteCardComponent } from '../../components'
+import {
+  UserInfoComponent,
+  DeleteCardComponent,
+  ModofyPasswordComponent,
+} from '../../components'
 import * as actionTypes from './store/actionCreators'
 import styles from './styles.moudle.less'
 
 enum PersonalCenter {
-  Info = 'info', // 我的资料
-  Goods = 'goods', // 我的商品
-  Buy = 'buy', // 我的求购
+  Info = 'Info', // 我的资料
+  Goods = 'Goods', // 我的商品
+  Buy = 'Buy', // 我的求购
+  ModofyPassword = 'ModofyPassword', // 修改密码
 }
 
 const User = (props: any) => {
@@ -99,23 +109,30 @@ const User = (props: any) => {
           <Menu.Item
             className={styles.menuItem}
             key={PersonalCenter.Info}
-            icon={<MailOutlined />}
+            icon={<UserOutlined />}
           >
             我的资料
           </Menu.Item>
           <Menu.Item
             className={styles.menuItem}
             key={PersonalCenter.Goods}
-            icon={<CalendarOutlined />}
+            icon={<ShoppingOutlined />}
           >
             我的商品
           </Menu.Item>
           <Menu.Item
             className={styles.menuItem}
             key={PersonalCenter.Buy}
-            icon={<CalendarOutlined />}
+            icon={<GiftOutlined />}
           >
             我的求购
+          </Menu.Item>
+          <Menu.Item
+            className={styles.menuItem}
+            key={PersonalCenter.ModofyPassword}
+            icon={<LockOutlined />}
+          >
+            修改密码
           </Menu.Item>
         </Menu>
       </div>
@@ -178,6 +195,12 @@ const User = (props: any) => {
               </Button>
             </Empty>
           ))}
+        {selected === PersonalCenter.ModofyPassword && (
+          <ModofyPasswordComponent
+            updateUserInfo={updateUserInfoDataDispatch}
+            userInfo={!userInfo.size ? localUserInfo : userInfo.toJS()}
+          />
+        )}
       </div>
     </div>
   )

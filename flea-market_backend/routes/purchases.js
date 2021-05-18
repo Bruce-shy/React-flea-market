@@ -8,10 +8,8 @@ const {
   create,
   update,
   delete: del,
-  listTopicFollowers,
   checkPurchaseExist,
   checkPublisher,
-  listQuestions,
 } = require('../controllers/purchases')
 
 const auth = jwt({ secret })
@@ -23,10 +21,6 @@ router.post('/', auth, create)
 router.get('/:id', checkPurchaseExist, findById)
 
 router.put('/:id', auth, checkPurchaseExist, update)
-
-// router.get('/:id/followers', checkPurchaseExist, listTopicFollowers)
-
-// router.get('/:id/questions', checkPurchaseExist, listQuestions)
 
 router.delete('/:id', auth, checkPurchaseExist, checkPublisher, del) // 删除商品信息
 

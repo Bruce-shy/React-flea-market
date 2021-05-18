@@ -85,7 +85,7 @@ function Edit(props) {
     if (props.match.params.id) {
       modifyOne(_id, {
         ...values,
-        avatarUrl:avatarUrl,
+        avatarUrl: avatarUrl,
       })
         .then((res) => {
           if (res.success) {
@@ -101,7 +101,7 @@ function Edit(props) {
     } else {
       createApi({
         ...values,
-        avatarUrl:avatarUrl,
+        avatarUrl: avatarUrl,
       })
         .then((res) => {
           if (res.success) {
@@ -169,7 +169,7 @@ function Edit(props) {
           ]}
           hasFeedback
         >
-          <Input.Password />
+          <Input.Password minLength={6} />
         </Form.Item>
         <Form.Item
           name='confirm'
@@ -191,7 +191,7 @@ function Edit(props) {
             }),
           ]}
         >
-          <Input.Password />
+          <Input.Password minLength={6} />
         </Form.Item>
         <Form.Item
           name='avatar'

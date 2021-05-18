@@ -119,7 +119,6 @@ export const getUserPublishGoods = (id: string, data: object) => {
     getUserPublishGoodsRequest(id, data)
       .then((res: any) => {
         if (res.success) {
-          console.log('商品', res)
           dispatch(changeMyGoods(res.data))
           // 每次请求后在本地存储数据 存本地的原因 在用户第一次登录时获取用户信息
           setLocalStorage('myGoods', JSON.stringify(res.data))
@@ -139,7 +138,6 @@ export const getUserPublishPurchase = (id: string, data: object) => {
     getUserPublishPurchaseRequest(id, data)
       .then((res: any) => {
         if (res.success) {
-          console.log('求购', res)
           dispatch(changeMyPurchase(res.data))
           // 每次请求后在本地存储数据 存本地的原因 在用户第一次登录时获取用户信息
           setLocalStorage('myPurchase', JSON.stringify(res.data))

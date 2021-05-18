@@ -96,6 +96,8 @@ class CommentController {
     }
     ctx.status = 204
   }
+
+  // 核对评论是否存在
   async checkCommentExist(ctx, next) {
     const comment = await Comment.findById(ctx.params.id).select('+commentator')
     if (!comment) {
