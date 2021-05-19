@@ -19,30 +19,41 @@ export const changePurchaseList = (data: any) => ({
 // 获取所有求购信息
 export const getPurchaseList = (page = 1, remind = true) => {
   return (dispatch: any) => {
-    const messageHide = message.loading('加载中', 0) // 全局loading 异步自行移除
-    getPurchaseListRequest(page)
-      .then((res: any) => {
-        messageHide()
-        dispatch(changeEnterLoading(false))
-        if (res.success) {
-          if (res.data.length === 0) {
-            message.error('没有更多数据了')
-            return
-          }
-          dispatch(changePurchaseList(res.data))
-          if (remind) {
+    if (remind) {
+      const messageHide = message.loading('加载中', 0) // 全局loading 异步自行移除
+      getPurchaseListRequest(page)
+        .then((res: any) => {
+          messageHide()
+          dispatch(changeEnterLoading(false))
+          if (res.success) {
+            if (res.data.length === 0) {
+              message.warning('没有更多数据了')
+              dispatch(changePurchaseList(res.data))
+              return
+            }
+            dispatch(changePurchaseList(res.data))
             message.success(res.message)
-          }
-        } else {
-          if (remind) {
+          } else {
             message.error(res.message)
           }
-        }
-      })
-      .catch((err) => {
-        messageHide()
-        dispatch(changeEnterLoading(false))
-        message.error(err.message)
-      })
+        })
+        .catch((err) => {
+          messageHide()
+          dispatch(changeEnterLoading(false))
+          message.error(err.message)
+        })
+    } else {
+      getPurchaseListRequest(page)
+        .then((res: any) => {
+          if (res.success) {
+            dispatch(changePurchaseList(res.data))
+          } else {
+            console.log(res.message)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
   }
 }

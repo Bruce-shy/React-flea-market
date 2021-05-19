@@ -4,7 +4,7 @@ import { listApi } from '../../services/purchase'
 export const loadPurchase = (payload) => async (dispatch) => {
   const res = await listApi(payload.page, payload.per_page)
   if (!res.data.length && !payload.notRemind) {
-    message.error('没有更多数据了')
+    message.warning('没有更多数据了')
   }
   // 当异步操作完成之后通过dispatch触发reducer改变数据
   dispatch({

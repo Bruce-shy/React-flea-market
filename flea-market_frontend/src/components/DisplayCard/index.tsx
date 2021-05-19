@@ -14,8 +14,6 @@ const CardDesc = (props: any) => {
   return <p className={styles.cardDesc}>{brief}</p>
 }
 
-//下面这句必须写在组件里面
-
 const DisplayCard = (props: any) => {
   const { data } = props
   const history = useHistory()

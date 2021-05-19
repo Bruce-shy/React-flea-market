@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Form, Select, Button, Upload, Input, message } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
-import { isLogin, getLocalStorage, normFile,isPhoneNumber } from '../../common'
+import { isLogin, getLocalStorage, normFile, isPhoneNumber } from '../../common'
 import { baseUrl } from '../../utils/config'
 import { SellerLabel, LabelName } from '../../utils/interface'
 import { createPurchaseRequest } from '../../services/purchases'
@@ -39,7 +39,7 @@ const ReleaseBuy = (props: any) => {
 
   const handleOnFinish = (values: any) => {
     const { phoneNumber, qqNumber, weChatNumber, buyerLabel } = values
-    if(!isPhoneNumber(phoneNumber)){
+    if (!isPhoneNumber(phoneNumber)) {
       return
     }
     if (!phoneNumber && !qqNumber && !weChatNumber) {
@@ -58,10 +58,8 @@ const ReleaseBuy = (props: any) => {
         .then((res: any) => {
           if (res.success) {
             message.success(res.message)
-            getPurchaseListDataDispatch(1,false) // 发布成功 重新获取求购数据
-            getUserPublishPurchaseDataDispatch(
-             _userInfo.account,
-            ) // 发布成功 重新获取用户个人求购数据
+            getPurchaseListDataDispatch(1, false) // 发布成功 重新获取求购数据
+            getUserPublishPurchaseDataDispatch(_userInfo.account) // 发布成功 重新获取用户个人求购数据
             history.push('/buy')
           } else {
             message.error(res.message)
@@ -223,8 +221,8 @@ const mapStateToProps = (state: any) => ({
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    getPurchaseListDataDispatch(page:number, remind: boolean) {
-      dispatch(purchaseActionTypes.getPurchaseList(page,remind))
+    getPurchaseListDataDispatch(page: number, remind: boolean) {
+      dispatch(purchaseActionTypes.getPurchaseList(page, remind))
     },
     getUserPublishPurchaseDataDispatch(id: string, data: object) {
       dispatch(userActionTypes.getUserPublishPurchase(id, data))

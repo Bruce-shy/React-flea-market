@@ -1,14 +1,6 @@
 import { memo, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import {
-  Form,
-  Cascader,
-  Select,
-  Button,
-  Upload,
-  message,
-  Input,
-} from 'antd'
+import { Form, Cascader, Select, Button, Upload, message, Input } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
 import { isLogin, getLocalStorage, normFile, isPhoneNumber } from '../../common'
@@ -64,7 +56,7 @@ const ReleaseGoods = (props: any) => {
         .then((res: any) => {
           if (res.success) {
             message.success(res.message)
-            getGoodsListDataDispatch() // 发布成功 重新获取商品数据
+            getGoodsListDataDispatch(1, false) // 发布成功 重新获取商品数据
             getUserPublishGoodsDataDispatch(_userInfo.account) // 发布成功 重新获取用户个人商品数据
             history.push('/goods')
           } else {
@@ -303,8 +295,8 @@ const mapStateToProps = (state: any) => ({
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    getGoodsListDataDispatch() {
-      dispatch(goodsActionTypes.getGoodsList())
+    getGoodsListDataDispatch(page: number, remind: boolean) {
+      dispatch(goodsActionTypes.getGoodsList(page, remind))
     },
     getUserPublishGoodsDataDispatch(id: string, data: object) {
       dispatch(useraAtionTypes.getUserPublishGoods(id, data))

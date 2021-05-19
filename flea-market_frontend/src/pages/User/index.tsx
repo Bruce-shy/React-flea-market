@@ -17,7 +17,9 @@ import {
   DeleteCardComponent,
   ModofyPasswordComponent,
 } from '../../components'
-import * as actionTypes from './store/actionCreators'
+import * as userActionTypes from './store/actionCreators'
+import * as goodsActionTypes from '../Home/store/actionCreators'
+import * as purchaseActionTypes from '../Purchase/store/actionCreators'
 import styles from './styles.moudle.less'
 
 enum PersonalCenter {
@@ -33,6 +35,8 @@ const User = (props: any) => {
     updateUserInfoDataDispatch,
     getUserPublishGoodsDataDispatch,
     getUserPublishPurchaseDataDispatch,
+    getGoodsListDataDispatch,
+    getPurchaseListDataDispatch,
   } = props
   const localUserInfo = JSON.parse(getLocalStorage('userInfo') || '{}')
   const localMyGoods = JSON.parse(getLocalStorage('myGoods') || '{}')
@@ -57,12 +61,13 @@ const User = (props: any) => {
   }
 
   const handleOnDeleteGoods = (_id: string, account: string) => {
-    update_myGoods(_myGoods.filter((item: any) => item._id !== _id))
     deleteGoodsInfoRequest(_id)
       .then((res: any) => {
         if (res.success) {
+          update_myGoods(_myGoods.filter((item: any) => item._id !== _id))
           message.success(res.message)
           getUserPublishGoodsDataDispatch(account)
+          getGoodsListDataDispatch(1, false)
         } else {
           message.error(res.message)
         }
@@ -73,12 +78,13 @@ const User = (props: any) => {
   }
 
   const handleOnDeletePurchase = (_id: string, account: string) => {
-    update_myPurchase(_myPurchase.filter((item: any) => item._id !== _id))
     deletePurchaseInfoRequest(_id)
       .then((res: any) => {
         if (res.success) {
+          update_myPurchase(_myPurchase.filter((item: any) => item._id !== _id))
           message.success(res.message)
           getUserPublishPurchaseDataDispatch(account)
+          getPurchaseListDataDispatch(1, false)
         } else {
           message.error(res.message)
         }
@@ -217,13 +223,19 @@ const mapStateToProps = (state: any) => ({
 const mapDispatchToProps = (dispatch: any) => {
   return {
     updateUserInfoDataDispatch(id: string, data: object) {
-      dispatch(actionTypes.updateUserInfo(id, data))
+      dispatch(userActionTypes.updateUserInfo(id, data))
     },
     getUserPublishGoodsDataDispatch(id: string, data: object) {
-      dispatch(actionTypes.getUserPublishGoods(id, data))
+      dispatch(userActionTypes.getUserPublishGoods(id, data))
     },
     getUserPublishPurchaseDataDispatch(id: string, data: object) {
-      dispatch(actionTypes.getUserPublishPurchase(id, data))
+      dispatch(userActionTypes.getUserPublishPurchase(id, data))
+    },
+    getGoodsListDataDispatch(page: number, remind: boolean) {
+      dispatch(goodsActionTypes.getGoodsList(page, remind))
+    },
+    getPurchaseListDataDispatch(page: number, remind: boolean) {
+      dispatch(purchaseActionTypes.getPurchaseList(page, remind))
     },
   }
 }

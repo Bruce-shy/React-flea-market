@@ -53,11 +53,12 @@ export const getGoodsList = (page = 1, remind = true) => {
       getGoodsListRequest(page)
         .then((res: any) => {
           messageHide()
-          if (res.data.length === 0) {
-            message.error('没有更多数据了')
-            return
-          }
           if (res.success) {
+            if (res.data.length === 0) {
+              message.warning('没有更多数据了')
+              dispatch(changeGoodsList(res.data))
+              return
+            }
             dispatch(changeGoodsList(res.data))
             message.success(res.message)
           } else {
@@ -94,11 +95,12 @@ export const getGoodsListByCategory = (page = 1, category: Array<string>) => {
     getGoodsListByCategoryRequest(page, category)
       .then((res: any) => {
         messageHide()
-        if (res.data.length === 0) {
-          message.error('没有更多数据了')
-          return
-        }
         if (res.success) {
+          if (res.data.length === 0) {
+            message.warning('没有更多数据了')
+            dispatch(changeGoodsList(res.data))
+            return
+          }
           dispatch(changeGoodsList(res.data))
           message.success(res.message)
         } else {
