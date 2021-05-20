@@ -5,7 +5,7 @@ const { Schema, model } = mongoose
 const commentSchema = new Schema(
   {
     __v: { type: Number, select: false },
-    rate: { type: Number}, // 评分
+    rate: { type: Number, required: true }, // 评分
     content: { type: String, required: true }, // 内容
     commentator: {
       type: Schema.Types.ObjectId,
