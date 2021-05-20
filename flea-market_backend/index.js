@@ -43,7 +43,7 @@ app.use(
   })
 )
 
-app.use(parameter(app))
+app.use(parameter(app)) // 用于参数校验
 
 app.use(koa2Cors()) // 后端使用 koa2-cors 处理跨域问题
 routing(app)
