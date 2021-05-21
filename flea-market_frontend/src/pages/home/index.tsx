@@ -6,10 +6,11 @@ import * as actionTypes from './store/actionCreators'
 import styles from './styles.moudle.less'
 
 const Home = (props: any) => {
-  const { goodsList, category,page } = props
+  const { goodsList, category, page } = props
   const { getGoodsListDataDispatch, getGoodsListByCategoryDataDispatch } = props
 
   const handleOnChange = (page: number) => {
+    console.log('category', category.toJS())
     if (category.size) {
       getGoodsListByCategoryDataDispatch(page, category.toJS())
     } else {
@@ -22,7 +23,8 @@ const Home = (props: any) => {
     if (!goodsList.size) {
       getGoodsListDataDispatch()
     }
-  }, [getGoodsListDataDispatch, goodsList, goodsList.size])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <>

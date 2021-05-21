@@ -113,7 +113,7 @@ function PurchaseList(props) {
 
   return (
     <Card
-      title='商品列表'
+      title='求购列表'
       extra={
         <Button
           type='primary'

@@ -3,7 +3,13 @@ import { connect } from 'react-redux'
 import { Form, Select, Button, Upload, Input, message } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
-import { isLogin, getLocalStorage, normFile, isPhoneNumber } from '../../common'
+import {
+  isLogin,
+  debounce,
+  getLocalStorage,
+  normFile,
+  isPhoneNumber,
+} from '../../common'
 import { baseUrl } from '../../utils/config'
 import { SellerLabel, LabelName } from '../../utils/interface'
 import { createPurchaseRequest } from '../../services/purchases'
@@ -37,7 +43,7 @@ const ReleaseBuy = (props: any) => {
     updateImageList(fileList)
   }
 
-  const handleOnFinish = (values: any) => {
+  const handleOnFinish = debounce((values: any) => {
     const { phoneNumber, qqNumber, weChatNumber, buyerLabel } = values
     if (!isPhoneNumber(phoneNumber)) {
       return
@@ -69,7 +75,7 @@ const ReleaseBuy = (props: any) => {
           message.error(err.message)
         })
     }
-  }
+  })
 
   useEffect(() => {
     if (!(_isLogin || isLogin())) {

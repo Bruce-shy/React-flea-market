@@ -14,7 +14,7 @@ const fromRef = createRef()
 
 function Login(props) {
   const Failed = () => {
-    message.error('用户不存在')
+    message.error('用户不存在或密码错误')
   }
 
   useEffect(() => {
@@ -28,6 +28,8 @@ function Login(props) {
   const onFinish = (values) => {
     if (values.remember) {
       localStorage.setItem('account', values.account)
+    } else {
+      localStorage.clear('account')
     }
     loginApi({
       account: values.account,

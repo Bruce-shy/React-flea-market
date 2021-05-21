@@ -36,7 +36,8 @@ const Purchase = (props: any) => {
     if (!purchaseList.size) {
       getPurchaseListDataDispatch()
     }
-  }, [getPurchaseListDataDispatch, purchaseList.size])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div className={styles.purchaseWrap}>
@@ -45,17 +46,16 @@ const Purchase = (props: any) => {
         itemLayout='vertical'
         size='small'
         pagination={{
-          total:40,
-          showSizeChanger:false,
-          onChange: (page:number) => {
+          total: 40,
+          showSizeChanger: false,
+          onChange: (page: number) => {
             getPurchaseListDataDispatch(page)
           },
           pageSize: 4,
         }}
         bordered={true}
         // isEmpty 判断对象是否为空
-        dataSource={purchaseList.toJS()
-        }
+        dataSource={purchaseList.toJS()}
         loading={enterLoading} // 数据请求
         renderItem={(item: any) => (
           <List.Item
@@ -106,7 +106,7 @@ const mapStateToProps = (state: any) => ({
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    getPurchaseListDataDispatch(page:number) {
+    getPurchaseListDataDispatch(page: number) {
       dispatch(actionTypes.getPurchaseList(page))
     },
   }

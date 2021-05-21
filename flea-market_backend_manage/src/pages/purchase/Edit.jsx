@@ -99,7 +99,7 @@ function Edit(props) {
     <Card
       title='求购编辑'
       extra={
-        <Button onClick={() => props.history.push('/admin/goods')}>返回</Button>
+        <Button onClick={() => props.history.push('/admin/purchase')}>返回</Button>
       }
     >
       <Form

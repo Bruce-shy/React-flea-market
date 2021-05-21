@@ -3,7 +3,13 @@ import { connect } from 'react-redux'
 import { Form, Cascader, Select, Button, Upload, message, Input } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
-import { isLogin, getLocalStorage, normFile, isPhoneNumber } from '../../common'
+import {
+  isLogin,
+  debounce,
+  getLocalStorage,
+  normFile,
+  isPhoneNumber,
+} from '../../common'
 import { baseUrl } from '../../utils/config'
 import { SellerLabel, LabelName, CategoryOptions } from '../../utils/interface'
 import { createGoodsRequest } from '../../services/goods'
@@ -35,7 +41,7 @@ const ReleaseGoods = (props: any) => {
     updateImageList(fileList)
   }
 
-  const handleOnFinish = (values: any) => {
+  const handleOnFinish = debounce((values: any) => {
     const { phoneNumber, qqNumber, weChatNumber, sellerLabel } = values
 
     if (!isPhoneNumber(phoneNumber)) {
@@ -67,7 +73,7 @@ const ReleaseGoods = (props: any) => {
           message.error(err.message)
         })
     }
-  }
+  })
 
   useEffect(() => {
     if (!(_isLogin || isLogin())) {

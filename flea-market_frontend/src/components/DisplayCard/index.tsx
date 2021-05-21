@@ -39,7 +39,7 @@ const DisplayCard = (props: any) => {
         <span>{data.views ? data.views : 0}人浏览</span>
       </div>
       <div className={styles.cardInfo}>
-        <span className={styles.cardAmount}>{data.price}</span>
+        <span className={styles.cardAmount}>￥{data.price}</span>
         <NavLink to={`/goods_detail?${data._id}`} activeClassName='selected'>
           软件学院
         </NavLink>

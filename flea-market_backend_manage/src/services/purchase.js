@@ -4,7 +4,7 @@ import { get, post, put, del } from '../utils/request'
  * 获取列表
  * @param {*} page
  */
-export function listApi(page = 1,per_page=10) {
+export function listApi(page = 1, per_page = 5) {
   return get('/purchases', { page, per_page })
 }
 

@@ -24,7 +24,7 @@ const PictureSwitch = (props: { imageList: Array<string> }) => {
   return (
     <div className={styles.thumbWrap}>
       <div className={styles.imgBoxWrap}>
-        <Image width={350} src={imageList[activeImgId]} />
+        <Image width={300} src={imageList[activeImgId]} />
       </div>
       <div className={styles.imgListWrap}>
         {imageList.map((item, id) => (

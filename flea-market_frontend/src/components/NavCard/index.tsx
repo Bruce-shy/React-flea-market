@@ -6,7 +6,7 @@ import styles from './styles.moudle.less'
 
 const { SubMenu } = Menu
 
-const NavCard = ({ goodsList, onSelect, page }: any) => {
+const NavCard = ({ onSelect, page }: any) => {
   const handleClick = (e: any) => {
     onSelect(page, e.keyPath.reverse())
   }

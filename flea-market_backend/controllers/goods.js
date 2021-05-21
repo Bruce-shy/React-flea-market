@@ -24,8 +24,6 @@ class GoodsController {
     const perPage = Math.max(per_page * 1, 1)
     const { category } = ctx.query
     const arr = category.split(',')
-    console.log(arr);
-    console.log(category);
     const goodsList = await Goods.find({ category: arr }).populate(
       'publisher'
     )
