@@ -4,8 +4,8 @@ import { get, post, patch } from '../utils/request'
  * 获取列表
  * @param {*} page
  */
-// export function listApi(page = 1) {
-//   return get("/api/v1/admin/users", { page, per: 10 });
+// export const getAllUserListRequest = (page = 1) => {
+//   return get('/users', { page, per_page: 10 })
 // }
 
 /**
@@ -28,7 +28,7 @@ export const getUserInfoRequest = (id: string, data: object) => {
  * 根据id获取用户发布的商品
  * @param {*} id
  */
- export const getUserPublishGoodsRequest = (id: string, data: object) => {
+export const getUserPublishGoodsRequest = (id: string, data: object) => {
   return get(`/users/${id}/publishGoods`, data)
 }
 
@@ -36,7 +36,7 @@ export const getUserInfoRequest = (id: string, data: object) => {
  * 根据id获取用户发布的求购
  * @param {*} id
  */
- export const getUserPublishPurchaseRequest = (id: string, data: object) => {
+export const getUserPublishPurchaseRequest = (id: string, data: object) => {
   return get(`/users/${id}/publishPurchase`, data)
 }
 
